@@ -2,6 +2,8 @@
 
 > **Production-Ready Next.js Application for Pharmaceutical Portfolio Management**
 
+**Live Demo:** [https://hctask.vercel.app](https://hctask.vercel.app)
+
 A comprehensive, enterprise-grade dashboard for managing drug development programs, clinical studies, and research teams. Built with modern technologies and best practices for scalability, maintainability, and user experience.
 
 ## Features
@@ -374,6 +376,8 @@ const { hasPermission } = useAuthStore();
 ## Deployment
 
 ### Vercel (Recommended)
+
+The application is deployed on Vercel at [https://hctask.vercel.app](https://hctask.vercel.app).
 
 ```bash
 # Connect your GitHub repository to Vercel
