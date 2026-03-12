@@ -122,20 +122,34 @@ export const programs: Program[] = [
   },
 ];
 
-export function getAllPrograms(): Program[] {
+export async function getAllPrograms(): Promise<Program[]> {
   return programs;
 }
 
-export function getProgramById(id: string): Program | undefined {
-  return programs.find(p => p.id === id);
+export async function getProgramById(id: string): Promise<Program | null> {
+  return programs.find(p => p.id === id) ?? null;
 }
 
-export function createProgram(program: Program): Program {
-  programs.push(program);
-  return program;
+export async function createProgram(
+  programData: Omit<Program, "id" | "createdAt" | "updatedAt" | "studies" | "milestones">
+): Promise<Program> {
+  const newId = `PROG${String(programs.length + 1).padStart(3, "0")}`;
+  const newProgram: Program = {
+    id: newId,
+    ...programData,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    studies: [],
+    milestones: [],
+  };
+  programs.push(newProgram);
+  return newProgram;
 }
 
-export function updateProgram(id: string, updates: Partial<Program>): Program | null {
+export async function updateProgram(
+  id: string,
+  updates: Partial<Omit<Program, "id" | "createdAt" | "updatedAt" | "studies" | "milestones">>
+): Promise<Program | null> {
   const index = programs.findIndex(p => p.id === id);
   if (index === -1) return null;
 
@@ -148,7 +162,7 @@ export function updateProgram(id: string, updates: Partial<Program>): Program | 
   return programs[index];
 }
 
-export function deleteProgram(id: string): boolean {
+export async function deleteProgram(id: string): Promise<boolean> {
   const index = programs.findIndex(p => p.id === id);
   if (index === -1) return false;
 

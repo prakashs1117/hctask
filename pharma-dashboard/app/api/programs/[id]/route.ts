@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getProgramById, updateProgram, deleteProgram } from "@/lib/data/programs";
+import { env } from "@/lib/env";
+import * as mockData from "@/lib/data/programs";
+import * as dbData from "@/lib/data/programs-db";
+
+const { getProgramById, updateProgram, deleteProgram } = env.useMockData ? mockData : dbData;
 
 interface RouteParams {
   params: Promise<{
@@ -12,7 +16,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    const program = getProgramById(id);
+    const program = await getProgramById(id);
 
     if (!program) {
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
@@ -40,8 +44,14 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Update the program
-    const updatedProgram = updateProgram(id, body);
+    const updatedProgram = await updateProgram(id, {
+      name: body.name,
+      description: body.description,
+      therapeuticArea: body.therapeuticArea,
+      phase: body.phase,
+      status: body.status,
+      manager: body.manager,
+    });
 
     if (!updatedProgram) {
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
@@ -59,7 +69,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    const deleted = deleteProgram(id);
+    const deleted = await deleteProgram(id);
 
     if (!deleted) {
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
