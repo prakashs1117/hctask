@@ -6,6 +6,7 @@ import { EmptyState } from "@/components/molecules/empty-state";
 import { EditUserDialog } from "@/components/organisms/iam/edit-user-dialog";
 import { ViewUserDialog } from "@/components/organisms/iam/view-user-dialog";
 import { Users, Shield, FileText } from "lucide-react";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 import type { User } from "@/types";
 
 interface UserTableProps {
@@ -16,6 +17,8 @@ interface UserTableProps {
 }
 
 export function UserTable({ users, isLoading, canManageUsers, onClearFilters }: UserTableProps) {
+  const { t } = useTranslation();
+
   return (
     <Card>
       <CardContent className="p-0">
@@ -23,9 +26,9 @@ export function UserTable({ users, isLoading, canManageUsers, onClearFilters }: 
           <div className="flex items-center justify-between">
             <h3 className="font-semibold flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              User Directory
+              {t("iam.userDirectory")}
             </h3>
-            <Badge variant="outline">{users.length} users</Badge>
+            <Badge variant="outline">{users.length} {t("navigation.iam").toLowerCase()}</Badge>
           </div>
         </div>
 
@@ -33,7 +36,7 @@ export function UserTable({ users, isLoading, canManageUsers, onClearFilters }: 
           <div className="py-12 text-center text-muted-foreground">
             <div className="flex items-center justify-center gap-2">
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-              Loading users...
+              {t("iam.loadingUsers")}
             </div>
           </div>
         ) : (
@@ -44,27 +47,27 @@ export function UserTable({ users, isLoading, canManageUsers, onClearFilters }: 
                   <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     <div className="flex items-center gap-2">
                       <Users className="h-3 w-3" />
-                      Name
+                      {t("common.name")}
                     </div>
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Email
+                    {t("common.email")}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     <div className="flex items-center gap-2">
                       <Shield className="h-3 w-3" />
-                      Role
+                      {t("common.role")}
                     </div>
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Programs
+                    {t("iam.programs")}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Status
+                    {t("common.status")}
                   </th>
                   {canManageUsers && (
                     <th className="px-4 py-3 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Actions
+                      {t("common.actions")}
                     </th>
                   )}
                 </tr>
@@ -78,8 +81,8 @@ export function UserTable({ users, isLoading, canManageUsers, onClearFilters }: 
 
             {users.length === 0 && (
               <EmptyState
-                title="No users found"
-                message="No users match your current filters. Try adjusting your search criteria."
+                title={t("iam.noUsersFound")}
+                message={t("iam.noUsersFoundDesc")}
                 onClear={onClearFilters}
               />
             )}
@@ -91,6 +94,8 @@ export function UserTable({ users, isLoading, canManageUsers, onClearFilters }: 
 }
 
 function UserRow({ user, canManageUsers }: { user: User; canManageUsers: boolean }) {
+  const { t } = useTranslation();
+
   return (
     <tr className="transition-colors hover:bg-muted/30">
       <td className="px-4 py-3">
@@ -125,7 +130,7 @@ function UserRow({ user, canManageUsers }: { user: User; canManageUsers: boolean
             </Badge>
           )}
           {user.assignedPrograms.length === 0 && (
-            <span className="text-xs text-muted-foreground">No assignments</span>
+            <span className="text-xs text-muted-foreground">{t("common.noAssignments")}</span>
           )}
         </div>
       </td>

@@ -10,14 +10,14 @@ import { useTranslation } from "@/lib/hooks/useTranslation";
  */
 export function Header() {
   const { theme, setTheme } = useTheme();
-  const { locale, changeLocale } = useTranslation();
+  const { t, locale, changeLocale } = useTranslation();
 
   return (
     <header className="flex h-12 sm:h-14 md:h-16 items-center justify-between border-b bg-card px-3 sm:px-4 md:px-6">
       <div className="flex items-center gap-2 sm:gap-3">
         <div className="rounded-md bg-primary/10 px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium text-primary">
-          <span className="hidden sm:inline">MFE Architecture • Module Federation</span>
-          <span className="sm:hidden">MFE • Module Federation</span>
+          <span className="hidden sm:inline">{t("common.mfeArchitecture")}</span>
+          <span className="sm:hidden">{t("common.mfeShort")}</span>
         </div>
       </div>
 
@@ -27,11 +27,11 @@ export function Header() {
           variant="ghost"
           size="sm"
           onClick={() => changeLocale(locale === "en" ? "es" : "en")}
-          title="Change language"
+          title={t("common.changeLanguage")}
           className="h-8 w-8 p-0 sm:h-9 sm:w-9"
         >
           <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
-          <span className="sr-only">Toggle language</span>
+          <span className="sr-only">{t("common.toggleLanguage")}</span>
         </Button>
 
         {/* Theme Toggle */}
@@ -39,12 +39,12 @@ export function Header() {
           variant="ghost"
           size="sm"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          title="Toggle theme"
+          title={t("common.toggleTheme")}
           className="h-8 w-8 p-0 sm:h-9 sm:w-9"
         >
           <Sun className="h-4 w-4 sm:h-5 sm:w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-4 w-4 sm:h-5 sm:w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">{t("common.toggleTheme")}</span>
         </Button>
       </div>
     </header>

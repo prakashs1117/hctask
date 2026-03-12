@@ -13,7 +13,7 @@ import { DashboardHeader } from "@/components/organisms/dashboard/dashboard-head
 import { DashboardStats } from "@/components/organisms/dashboard/dashboard-stats";
 import { ProgramFilterBar } from "@/components/organisms/programs/program-filter-bar";
 import { ProgramPortfolio } from "@/components/organisms/programs/program-portfolio";
-import { useTranslation, TRANSLATION_KEYS } from "@/lib/i18n";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -52,9 +52,9 @@ export default function DashboardPage() {
         setFilterSidebarOpen={setFilterSidebarOpen}
         hasActiveFilters={hasActiveFilters}
         activeFilterCount={activeFilterCount}
-        searchPlaceholder={t(TRANSLATION_KEYS.PROGRAM.SEARCH_PROGRAMS)}
-        filterLabel={t(TRANSLATION_KEYS.COMMON.FILTERS)}
-        clearLabel={t(TRANSLATION_KEYS.COMMON.CLEAR_ALL)}
+        searchPlaceholder={t("programs.searchPrograms")}
+        filterLabel={t("common.filters")}
+        clearLabel={t("common.clearAll")}
       >
         <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
       </ProgramFilterBar>
@@ -69,7 +69,7 @@ export default function DashboardPage() {
       <FilterSidebar
         isOpen={filterSidebarOpen}
         onClose={() => setFilterSidebarOpen(false)}
-        title="Portfolio Filters"
+        title={t("dashboard.portfolioFilters")}
         activeFilterCount={activeFilterCount}
         onClearAll={hasActiveFilters ? () => filters.resetFilters() : undefined}
       >

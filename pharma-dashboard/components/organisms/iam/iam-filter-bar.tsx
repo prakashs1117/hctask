@@ -5,6 +5,7 @@ import { ClearFiltersButton } from "@/components/molecules/clear-filters-button"
 import { ResultsCount } from "@/components/molecules/results-count";
 import { FilterBadge } from "@/components/molecules/filter-badge";
 import { FilterToggleButton } from "@/components/molecules/filter-toggle-button";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 interface IAMFilterBarProps {
   searchQuery: string;
@@ -37,11 +38,13 @@ export function IAMFilterBar({
   filteredCount,
   totalCount,
 }: IAMFilterBarProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-4">
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 flex-1">
         <SearchInput
-          placeholder="Search users..."
+          placeholder={t("iam.searchUsers")}
           value={searchQuery}
           onChange={setSearchQuery}
         />
@@ -51,10 +54,10 @@ export function IAMFilterBar({
             onClick={() => setFilterSidebarOpen(true)}
             activeCount={activeFilterCount}
             isOpen={filterSidebarOpen}
-            label="Filters"
+            label={t("common.filters")}
           />
-          {hasActiveFilters && <ClearFiltersButton onClick={resetFilters} />}
-          <ResultsCount filtered={filteredCount} total={totalCount} label="users" />
+          {hasActiveFilters && <ClearFiltersButton onClick={resetFilters} label={t("common.clearAll")} />}
+          <ResultsCount filtered={filteredCount} total={totalCount} label={t("navigation.iam").toLowerCase()} />
         </div>
       </div>
 

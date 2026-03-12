@@ -21,8 +21,10 @@ import { calculateProgramTotals, truncateText } from "@/lib/utils/formatters";
 import { Beaker, FileText, BarChart3, Users, Eye } from "lucide-react";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/stores/authStore";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 export default function ProgramsPage() {
+  const { t } = useTranslation();
   const { data: programs, isLoading } = usePrograms();
   const filters = useFilterStore();
   const filteredPrograms = useFilteredPrograms(programs, filters);
@@ -45,8 +47,8 @@ export default function ProgramsPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="Programs Module"
-        description="Create and manage drug development programs and associated studies"
+        title={t("programs.title")}
+        description={t("programs.subtitle")}
         icon={Beaker}
         action={<CreateProgramDialog canCreate={canCreatePrograms} />}
       />
@@ -66,14 +68,14 @@ export default function ProgramsPage() {
             <div className="flex items-center justify-between">
               <h3 className="font-semibold flex items-center gap-2">
                 <FileText className="h-4 w-4" />
-                Program Portfolio
+                {t("programs.programPortfolio")}
               </h3>
-              <Badge variant="outline">{filteredPrograms.length} programs</Badge>
+              <Badge variant="outline">{filteredPrograms.length} {t("navigation.programs").toLowerCase()}</Badge>
             </div>
           </div>
 
           {isLoading ? (
-            <LoadingSpinner message="Loading programs..." />
+            <LoadingSpinner message={t("programs.loadingPrograms")} />
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -82,39 +84,39 @@ export default function ProgramsPage() {
                     <th className="px-3 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                       <div className="flex items-center gap-1">
                         <FileText className="h-3 w-3 hidden sm:block" />
-                        <span className="hidden sm:inline">ID</span>
+                        <span className="hidden sm:inline">{t("programs.id")}</span>
                         <span className="sm:hidden">#</span>
                       </div>
                     </th>
                     <th className="px-3 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                       <div className="flex items-center gap-1">
                         <Beaker className="h-3 w-3 hidden sm:block" />
-                        Program
+                        {t("programs.program")}
                       </div>
                     </th>
                     <th className="px-3 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden md:table-cell">
                       <div className="flex items-center gap-1">
                         <Users className="h-3 w-3" />
-                        Area
+                        {t("programs.area")}
                       </div>
                     </th>
                     <th className="px-3 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                       <div className="flex items-center gap-1">
                         <BarChart3 className="h-3 w-3 hidden sm:block" />
-                        Phase
+                        {t("filters.phase")}
                       </div>
                     </th>
                     <th className="px-3 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden lg:table-cell">
-                      Studies
+                      {t("programs.studies")}
                     </th>
                     <th className="px-3 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden xl:table-cell">
-                      Enrollment
+                      {t("programs.enrollment")}
                     </th>
                     <th className="px-3 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden lg:table-cell">
-                      Manager
+                      {t("programs.manager")}
                     </th>
                     <th className="px-3 sm:px-4 py-3 text-right text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Actions
+                      {t("common.actions")}
                     </th>
                   </tr>
                 </thead>
@@ -153,14 +155,14 @@ export default function ProgramsPage() {
                         <td className="px-3 sm:px-4 py-2 sm:py-3 hidden lg:table-cell">
                           <div className="flex items-center gap-1">
                             <span className="font-medium text-sm">{program.studies.length}</span>
-                            <span className="text-xs text-muted-foreground hidden xl:inline">studies</span>
+                            <span className="text-xs text-muted-foreground hidden xl:inline">{t("programs.xStudies")}</span>
                           </div>
                         </td>
                         <td className="px-3 sm:px-4 py-2 sm:py-3 hidden xl:table-cell">
                           <div className="w-32">
                             <EnrollmentBar current={totalEnrollment} target={totalTarget} />
                             <div className="text-[10px] text-muted-foreground mt-1">
-                              {totalEnrollment}/{totalTarget} enrolled
+                              {totalEnrollment}/{totalTarget} {t("programs.enrolled")}
                             </div>
                           </div>
                         </td>
@@ -173,7 +175,7 @@ export default function ProgramsPage() {
                             <Link href={`/programs/${program.id}`}>
                               <Button variant="ghost" size="sm" className="gap-1 h-7 px-2">
                                 <Eye className="h-3 w-3" />
-                                <span className="hidden sm:inline text-xs">View</span>
+                                <span className="hidden sm:inline text-xs">{t("common.view")}</span>
                               </Button>
                             </Link>
                             {hasPermission("edit_programs") && (
@@ -193,8 +195,8 @@ export default function ProgramsPage() {
 
               {filteredPrograms.length === 0 && (
                 <EmptyState
-                  title="No programs found"
-                  message="No programs match your current filters. Try adjusting your search criteria."
+                  title={t("programs.noProgramsFound")}
+                  message={t("programs.noProgramsFoundDesc")}
                   onClear={hasActiveFilters ? () => filters.resetFilters() : undefined}
                 />
               )}
@@ -206,7 +208,7 @@ export default function ProgramsPage() {
       <FilterSidebar
         isOpen={filterSidebarOpen}
         onClose={() => setFilterSidebarOpen(false)}
-        title="Program Filters"
+        title={t("programs.programFilters")}
         activeFilterCount={activeFilterCount}
         onClearAll={hasActiveFilters ? () => filters.resetFilters() : undefined}
       >

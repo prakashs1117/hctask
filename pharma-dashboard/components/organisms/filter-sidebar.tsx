@@ -5,6 +5,7 @@ import { X, Filter } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { Badge } from "@/components/atoms/badge";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 interface FilterSidebarProps {
   isOpen: boolean;
@@ -19,12 +20,14 @@ interface FilterSidebarProps {
 export function FilterSidebar({
   isOpen,
   onClose,
-  title = "Filters",
+  title,
   children,
   activeFilterCount = 0,
   onClearAll,
   className
 }: FilterSidebarProps) {
+  const { t } = useTranslation();
+
   return (
     <>
       {/* Backdrop */}
@@ -47,7 +50,7 @@ export function FilterSidebar({
         <div className="flex items-center justify-between p-4 sm:p-5 lg:p-4 border-b bg-muted/20">
           <div className="flex items-center gap-3">
             <Filter className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">{title}</h2>
+            <h2 className="text-lg font-semibold">{title || t("common.filters")}</h2>
             {activeFilterCount > 0 && (
               <Badge variant="secondary" className="h-6 w-6 rounded-full p-0 text-xs flex items-center justify-center">
                 {activeFilterCount}
@@ -59,7 +62,7 @@ export function FilterSidebar({
             size="sm"
             onClick={onClose}
             className="h-8 w-8 p-0 hover:bg-muted"
-            title="Close filters"
+            title={t("common.closeFilters")}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -79,7 +82,7 @@ export function FilterSidebar({
               className="w-full gap-2 hover:bg-muted"
             >
               <X className="h-4 w-4" />
-              Clear All Filters ({activeFilterCount})
+              {t("common.clearAllFilters")} ({activeFilterCount})
             </Button>
           </div>
         )}

@@ -34,7 +34,10 @@
     "name": "Name",
     "description": "Description",
     "manager": "Manager",
-    "email": "Email"
+    "email": "Email",
+    "actions": "Actions",
+    "snooze": "Snooze",
+    "dismiss": "Dismiss"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -113,7 +116,7 @@
   },
   "alerts": {
     "title": "Alert & Notification System",
-    "subtitle": "Set program/study timelines • Web Push + Email + SMS notifications",
+    "subtitle": "Set program/study timelines \u2022 Web Push + Email + SMS notifications",
     "createAlert": "Create Alert",
     "alertFilters": "Alert Filters",
     "searchAlerts": "Search alerts...",

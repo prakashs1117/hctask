@@ -20,12 +20,14 @@ import { AlertFilters } from "@/components/organisms/alerts/alert-filters";
 import { Bell, AlertTriangle } from "lucide-react";
 import { formatDate, getDaysFromToday } from "@/lib/utils/formatters";
 import { useAuthStore } from "@/lib/stores/authStore";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 /**
  * Alerts page
  * Manages program/study alerts and notifications
  */
 export default function AlertsPage() {
+  const { t } = useTranslation();
   const { data: alerts, isLoading } = useQuery({
     queryKey: ["alerts"],
     queryFn: getAlerts,
@@ -47,7 +49,7 @@ export default function AlertsPage() {
       alert.study.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesStatus = statusFilter === "All" || alert.status === statusFilter;
-    const matchesChannel = channelFilter === "All" || alert.channel.includes(channelFilter);
+    const matchesChannel = channelFilter === "All" || alert.channel.includes(channelFilter as typeof alert.channel[number]);
 
     return matchesSearch && matchesStatus && matchesChannel;
   }) || [];
@@ -76,16 +78,16 @@ export default function AlertsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Alert & Notification System"
-        description="Set program/study timelines • Web Push + Email + SMS notifications"
+        title={t("alerts.title")}
+        description={t("alerts.subtitle")}
         action={<CreateAlertDialog canCreate={canSetAlerts} />}
       />
 
       {/* Statistics */}
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard title="Active Alerts" value={activeAlerts.length} icon={Bell} iconColor="text-primary" />
-        <StatCard title="Overdue" value={overdueAlerts.length} icon={AlertTriangle} iconColor="text-destructive" valueColor="text-destructive" />
-        <StatCard title="Next 7 Days" value={upcomingAlerts.length} icon={Bell} iconColor="text-amber-500" valueColor="text-amber-500" />
+        <StatCard title={t("alerts.activeAlerts")} value={activeAlerts.length} icon={Bell} iconColor="text-primary" />
+        <StatCard title={t("alerts.overdue")} value={overdueAlerts.length} icon={AlertTriangle} iconColor="text-destructive" valueColor="text-destructive" />
+        <StatCard title={t("alerts.nextSevenDays")} value={upcomingAlerts.length} icon={Bell} iconColor="text-amber-500" valueColor="text-amber-500" />
       </div>
 
       {/* Filter Controls */}
@@ -93,7 +95,7 @@ export default function AlertsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 flex-1">
           {/* Search Bar */}
           <SearchInput
-            placeholder="Search alerts..."
+            placeholder={t("alerts.searchAlerts")}
             value={searchQuery}
             onChange={setSearchQuery}
           />
@@ -104,11 +106,11 @@ export default function AlertsPage() {
               onClick={() => setFilterSidebarOpen(true)}
               activeCount={activeFilterCount}
               isOpen={filterSidebarOpen}
-              label="Filters"
+              label={t("common.filters")}
             />
 
-            {hasActiveFilters && <ClearFiltersButton onClick={resetFilters} />}
-            <ResultsCount filtered={filteredAlerts.length} total={alerts?.length || 0} label="alerts" />
+            {hasActiveFilters && <ClearFiltersButton onClick={resetFilters} label={t("common.clearAll")} />}
+            <ResultsCount filtered={filteredAlerts.length} total={alerts?.length || 0} label={t("alerts.xAlerts").replace("{count}", "")} />
           </div>
         </div>
 
@@ -122,12 +124,12 @@ export default function AlertsPage() {
       {/* Alerts Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Active Alerts</CardTitle>
+          <CardTitle>{t("alerts.activeAlerts")}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="py-12 text-center text-muted-foreground">
-              Loading alerts...
+              {t("alerts.loadingAlerts")}
             </div>
           ) : filteredAlerts.length > 0 ? (
             <div className="overflow-x-auto">
@@ -135,23 +137,23 @@ export default function AlertsPage() {
                 <thead>
                   <tr className="border-b">
                     <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                      Program
+                      {t("alerts.program")}
                     </th>
                     <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                      Study
+                      {t("alerts.study")}
                     </th>
                     <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                      Deadline
+                      {t("alerts.deadline")}
                     </th>
                     <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                      Channel
+                      {t("alerts.channel")}
                     </th>
                     <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                      Status
+                      {t("common.status")}
                     </th>
                     {canSetAlerts && (
                       <th className="px-4 py-3 text-right text-sm font-medium text-muted-foreground">
-                        Actions
+                        {t("common.actions")}
                       </th>
                     )}
                   </tr>
@@ -203,10 +205,10 @@ export default function AlertsPage() {
                           <td className="px-4 py-3 text-right">
                             <div className="flex justify-end gap-2">
                               <Button variant="ghost" size="sm">
-                                Snooze
+                                {t("common.snooze")}
                               </Button>
                               <Button variant="outline" size="sm">
-                                Dismiss
+                                {t("common.dismiss")}
                               </Button>
                             </div>
                           </td>
@@ -220,13 +222,13 @@ export default function AlertsPage() {
           ) : alerts && alerts.length === 0 ? (
             <EmptyState
               icon={Bell}
-              title="No alerts configured"
-              message="Create your first alert to stay notified about important program milestones."
+              title={t("alerts.noAlertsConfigured")}
+              message={t("alerts.noAlertsConfiguredDesc")}
             />
           ) : (
             <EmptyState
-              title="No alerts match your filters"
-              message="Try adjusting your search criteria or clearing filters."
+              title={t("alerts.noAlertsMatch")}
+              message={t("alerts.noAlertsMatchDesc")}
               onClear={hasActiveFilters ? resetFilters : undefined}
             />
           )}
@@ -237,7 +239,7 @@ export default function AlertsPage() {
       <FilterSidebar
         isOpen={filterSidebarOpen}
         onClose={() => setFilterSidebarOpen(false)}
-        title="Alert Filters"
+        title={t("alerts.alertFilters")}
         activeFilterCount={activeFilterCount}
         onClearAll={hasActiveFilters ? resetFilters : undefined}
       >

@@ -11,8 +11,10 @@ import { IAMFilterBar } from "@/components/organisms/iam/iam-filter-bar";
 import { UserTable } from "@/components/organisms/iam/user-table";
 import { Plus, Shield } from "lucide-react";
 import { useAuthStore } from "@/lib/stores/authStore";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 export default function IAMPage() {
+  const { t } = useTranslation();
   const { data: users, isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
@@ -61,13 +63,13 @@ export default function IAMPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="Identity & Access Management"
-        description="Manage users, roles, permissions, and program assignments"
+        title={t("iam.title")}
+        description={t("iam.subtitle")}
         icon={Shield}
         action={canManageUsers ? (
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Add User
+            {t("iam.addUser")}
           </Button>
         ) : undefined}
       />
@@ -100,7 +102,7 @@ export default function IAMPage() {
       <FilterSidebar
         isOpen={filterSidebarOpen}
         onClose={() => setFilterSidebarOpen(false)}
-        title="User Filters"
+        title={t("iam.userFilters")}
         activeFilterCount={activeFilterCount}
         onClearAll={hasActiveFilters ? resetFilters : undefined}
       >

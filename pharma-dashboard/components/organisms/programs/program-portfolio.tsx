@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/molecules/empty-state";
 import { ProgramListItem } from "@/components/molecules/program-list-item";
 import { ProgramGridCard } from "@/components/molecules/program-grid-card";
 import { FileText } from "lucide-react";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 import type { Program } from "@/types";
 
 interface ProgramPortfolioProps {
@@ -17,6 +18,8 @@ interface ProgramPortfolioProps {
 }
 
 export function ProgramPortfolio({ programs, isLoading, viewMode, onClearFilters }: ProgramPortfolioProps) {
+  const { t } = useTranslation();
+
   return (
     <Card>
       <CardContent className="p-0">
@@ -24,15 +27,15 @@ export function ProgramPortfolio({ programs, isLoading, viewMode, onClearFilters
           <div className="flex items-center justify-between">
             <h3 className="font-semibold flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              Program Portfolio
+              {t("programs.programPortfolio")}
             </h3>
-            <Badge variant="outline">{programs.length} programs</Badge>
+            <Badge variant="outline">{programs.length} {t("navigation.programs").toLowerCase()}</Badge>
           </div>
         </div>
 
         <div className="p-6">
           {isLoading ? (
-            <LoadingSpinner message="Loading program portfolio..." />
+            <LoadingSpinner message={t("dashboard.loadingPortfolio")} />
           ) : (
             <>
               {viewMode === "list" ? (
@@ -51,8 +54,8 @@ export function ProgramPortfolio({ programs, isLoading, viewMode, onClearFilters
 
               {programs.length === 0 && (
                 <EmptyState
-                  title="No programs found"
-                  message="No programs match your current filters. Try adjusting your search criteria."
+                  title={t("dashboard.noProgramsFound")}
+                  message={t("dashboard.noProgramsFoundDesc")}
                   onClear={onClearFilters}
                 />
               )}

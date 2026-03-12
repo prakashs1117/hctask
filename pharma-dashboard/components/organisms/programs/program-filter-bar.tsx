@@ -6,6 +6,7 @@ import { ResultsCount } from "@/components/molecules/results-count";
 import { FilterBadge } from "@/components/molecules/filter-badge";
 import { FilterToggleButton } from "@/components/molecules/filter-toggle-button";
 import { useFilterStore } from "@/lib/stores/filterStore";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 interface ProgramFilterBarProps {
   filteredCount: number;
@@ -27,18 +28,19 @@ export function ProgramFilterBar({
   setFilterSidebarOpen,
   hasActiveFilters,
   activeFilterCount,
-  searchPlaceholder = "Search programs...",
-  filterLabel = "Filters",
+  searchPlaceholder,
+  filterLabel,
   clearLabel,
   children,
 }: ProgramFilterBarProps) {
+  const { t } = useTranslation();
   const filters = useFilterStore();
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-4">
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 flex-1">
         <SearchInput
-          placeholder={searchPlaceholder}
+          placeholder={searchPlaceholder || t("programs.searchPrograms")}
           value={filters.search}
           onChange={(value) => filters.setFilters({ search: value })}
         />
@@ -48,12 +50,12 @@ export function ProgramFilterBar({
             onClick={() => setFilterSidebarOpen(true)}
             activeCount={activeFilterCount}
             isOpen={filterSidebarOpen}
-            label={filterLabel}
+            label={filterLabel || t("common.filters")}
           />
           {hasActiveFilters && (
-            <ClearFiltersButton onClick={() => filters.resetFilters()} label={clearLabel} />
+            <ClearFiltersButton onClick={() => filters.resetFilters()} label={clearLabel || t("common.clearAll")} />
           )}
-          <ResultsCount filtered={filteredCount} total={totalCount} label="programs" />
+          <ResultsCount filtered={filteredCount} total={totalCount} label={t("navigation.programs").toLowerCase()} />
         </div>
       </div>
 

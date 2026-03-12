@@ -8,12 +8,13 @@ import { useUIStore } from "@/lib/stores/uiStore";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { Button } from "@/components/atoms/button";
 import { Select } from "@/components/atoms/select";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 /**
  * Navigation item configuration
  */
 interface NavItem {
-  title: string;
+  titleKey: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number;
@@ -21,22 +22,22 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    title: "Dashboard",
+    titleKey: "navigation.dashboard",
     href: "/",
     icon: Home,
   },
   {
-    title: "Programs",
+    titleKey: "navigation.programs",
     href: "/programs",
     icon: BarChart3,
   },
   {
-    title: "IAM",
+    titleKey: "navigation.iam",
     href: "/iam",
     icon: Users,
   },
   {
-    title: "Alerts",
+    titleKey: "navigation.alerts",
     href: "/alerts",
     icon: Bell,
     badge: 3,
@@ -47,6 +48,7 @@ const navItems: NavItem[] = [
  * Application sidebar component with navigation
  */
 export function Sidebar() {
+  const { t } = useTranslation();
   const pathname = usePathname();
   const { sidebarCollapsed, toggleSidebar } = useUIStore();
   const { role, setRole } = useAuthStore();
@@ -62,8 +64,8 @@ export function Sidebar() {
       <div className="flex h-16 items-center justify-between border-b px-4">
         {!sidebarCollapsed && (
           <div>
-            <h1 className="text-lg font-bold text-primary">Pharma RCD</h1>
-            <p className="text-xs text-muted-foreground">Portfolio Dashboard</p>
+            <h1 className="text-lg font-bold text-primary">{t("common.appName")}</h1>
+            <p className="text-xs text-muted-foreground">{t("common.appSubtitle")}</p>
           </div>
         )}
         <Button
@@ -86,6 +88,7 @@ export function Sidebar() {
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const title = t(item.titleKey);
 
           return (
             <Link
@@ -97,12 +100,12 @@ export function Sidebar() {
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               )}
-              title={sidebarCollapsed ? item.title : undefined}
+              title={sidebarCollapsed ? title : undefined}
             >
               <Icon className="h-5 w-5 shrink-0" />
               {!sidebarCollapsed && (
                 <>
-                  <span className="flex-1">{item.title}</span>
+                  <span className="flex-1">{title}</span>
                   {item.badge && (
                     <span className="rounded-full bg-destructive px-2 py-0.5 text-xs text-destructive-foreground">
                       {item.badge}
@@ -119,15 +122,15 @@ export function Sidebar() {
       {!sidebarCollapsed && (
         <div className="border-t p-4">
           <label className="mb-2 block text-xs font-medium text-muted-foreground">
-            View as role
+            {t("common.viewAsRole")}
           </label>
           <Select
             value={role}
             onChange={(e) => setRole(e.target.value as typeof role)}
           >
-            <option value="Manager">Manager</option>
-            <option value="Staff">Staff</option>
-            <option value="Viewer">Viewer</option>
+            <option value="Manager">{t("iam.roles.manager")}</option>
+            <option value="Staff">{t("iam.roles.staff")}</option>
+            <option value="Viewer">{t("iam.roles.viewer")}</option>
           </Select>
         </div>
       )}

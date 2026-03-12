@@ -7,6 +7,7 @@ interface EmptyStateProps {
   title?: string;
   message: string;
   onClear?: () => void;
+  clearLabel?: string;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
 }
@@ -37,6 +38,7 @@ export function EmptyState({
   title,
   message,
   onClear,
+  clearLabel = "Clear all filters",
   className,
   size = 'lg'
 }: EmptyStateProps) {
@@ -54,7 +56,7 @@ export function EmptyState({
       <p className={cn('text-muted-foreground leading-snug', title ? 'mb-4' : '', sizeStyle.text)}>{message}</p>
       {onClear && (
         <Button variant="outline" onClick={onClear}>
-          Clear all filters
+          {clearLabel}
         </Button>
       )}
     </div>
