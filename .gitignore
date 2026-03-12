@@ -40,3 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 *.md
+!README.md
+~$ugPortfolio_Architecture.docx
+New Folder With Items.zip
+Archive.zip
+.claude/docs
+.claude/settings.local.json
