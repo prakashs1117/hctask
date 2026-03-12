@@ -28,11 +28,11 @@ const editUserSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name too long"),
   email: z.string().email("Invalid email address"),
   role: z.enum(["Manager", "Staff", "Viewer"], {
-    errorMap: () => ({ message: "Role is required" }),
+    message: "Role is required",
   }),
-  assignedPrograms: z.array(z.string()).default([]),
+  assignedPrograms: z.array(z.string()),
   status: z.enum(["Active", "Inactive"], {
-    errorMap: () => ({ message: "Status is required" }),
+    message: "Status is required",
   }),
 });
 

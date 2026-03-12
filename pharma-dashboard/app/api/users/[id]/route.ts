@@ -12,7 +12,7 @@ const UpdateUserSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name too long').optional(),
   email: z.string().email('Invalid email address').optional(),
   role: z.enum(['Manager', 'Staff', 'Viewer'], {
-    errorMap: () => ({ message: 'Invalid role' })
+    message: 'Invalid role'
   }).optional(),
   assignedPrograms: z.array(z.string()).optional(),
   status: z.enum(['Active', 'Inactive']).optional(),
@@ -69,7 +69,7 @@ export async function PUT(
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map(err => ({
+          details: error.issues.map(err => ({
             field: err.path.join('.'),
             message: err.message
           }))

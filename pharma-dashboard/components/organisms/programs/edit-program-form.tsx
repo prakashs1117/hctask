@@ -56,7 +56,7 @@ export function EditProgramForm({ program, onSubmit, onCancel, isLoading = false
     } catch (error) {
       if (error instanceof z.ZodError) {
         const formErrors: Record<string, string> = {};
-        error.errors.forEach((err) => {
+        error.issues.forEach((err) => {
           if (err.path[0]) {
             formErrors[err.path[0] as string] = err.message;
           }

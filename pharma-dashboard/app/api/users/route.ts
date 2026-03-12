@@ -7,7 +7,7 @@ const CreateUserSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
   email: z.string().email('Invalid email address'),
   role: z.enum(['Manager', 'Staff', 'Viewer'], {
-    errorMap: () => ({ message: 'Role is required' })
+    message: 'Role is required'
   }),
   assignedPrograms: z.array(z.string()).default([]),
   status: z.enum(['Active', 'Inactive']).default('Active'),
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map(err => ({
+          details: error.issues.map(err => ({
             field: err.path.join('.'),
             message: err.message
           }))

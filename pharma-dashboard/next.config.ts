@@ -1,11 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {
-      useSystemTlsCerts: true,
-    },
-  },
-};
+const nextConfig: NextConfig = {};
+
 
 export default nextConfig;
