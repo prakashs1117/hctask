@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import {
@@ -54,13 +55,13 @@ export function CreateAlertDialog({ canCreate }: CreateAlertDialogProps) {
       // Close dialog and show success message
       setIsOpen(false);
 
-      // You could add a toast notification here
-      alert("Alert created successfully!");
+      toast.success("Alert created successfully!");
 
       // Refresh the page to show the new alert
       window.location.reload();
     } catch (error) {
       console.error("Failed to create alert:", error);
+      toast.error("Failed to create alert. Please try again.");
       throw error; // Re-throw so form can handle it
     } finally {
       setIsLoading(false);

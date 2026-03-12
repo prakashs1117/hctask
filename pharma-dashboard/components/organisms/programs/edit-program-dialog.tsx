@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Edit } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/atoms/button";
@@ -61,10 +62,10 @@ export function EditProgramDialog({ program, canEdit, variant = "default" }: Edi
       // Close dialog and show success message
       setIsOpen(false);
 
-      // You could add a toast notification here
-      alert("Program updated successfully!");
+      toast.success("Program updated successfully!");
     } catch (error) {
       console.error("Failed to update program:", error);
+      toast.error("Failed to update program. Please try again.");
       throw error; // Re-throw so form can handle it
     } finally {
       setIsLoading(false);

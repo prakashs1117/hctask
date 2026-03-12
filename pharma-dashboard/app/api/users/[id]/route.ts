@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserById, updateUser, deleteUser } from '@/lib/data/users';
+import { env } from '@/lib/env';
+import * as mockData from '@/lib/data/users';
+import * as dbData from '@/lib/data/users-db';
 import { z } from 'zod';
+
+const { getUserById, updateUser, deleteUser } = env.useMockData ? mockData : dbData;
 
 // Define the params type for Next.js 15+
 interface RouteParams {

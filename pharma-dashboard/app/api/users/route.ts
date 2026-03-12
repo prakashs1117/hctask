@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllUsers, createUser } from '@/lib/data/users';
+import { env } from '@/lib/env';
+import * as mockData from '@/lib/data/users';
+import * as dbData from '@/lib/data/users-db';
 import { z } from 'zod';
+
+const { getAllUsers, createUser } = env.useMockData ? mockData : dbData;
 
 // Validation schema for creating a user
 const CreateUserSchema = z.object({
