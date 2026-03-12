@@ -7,7 +7,13 @@ import { cn } from "@/lib/utils/cn";
 import { useUIStore } from "@/lib/stores/uiStore";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { Button } from "@/components/atoms/button";
-import { Select } from "@/components/atoms/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/atoms/select";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 
 /**
@@ -126,11 +132,16 @@ export function Sidebar() {
           </label>
           <Select
             value={role}
-            onChange={(e) => setRole(e.target.value as typeof role)}
+            onValueChange={(value) => setRole(value as typeof role)}
           >
-            <option value="Manager">{t("iam.roles.manager")}</option>
-            <option value="Staff">{t("iam.roles.staff")}</option>
-            <option value="Viewer">{t("iam.roles.viewer")}</option>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={t("common.viewAsRole")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Manager">{t("iam.roles.manager")}</SelectItem>
+              <SelectItem value="Staff">{t("iam.roles.staff")}</SelectItem>
+              <SelectItem value="Viewer">{t("iam.roles.viewer")}</SelectItem>
+            </SelectContent>
           </Select>
         </div>
       )}
