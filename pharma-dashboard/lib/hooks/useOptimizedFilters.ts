@@ -35,23 +35,23 @@ export function useOptimizedFilters(filters: FilterStore) {
   // Memoize filter handler functions
   const clearSearch = useCallback(() => {
     filters.setFilters({ search: "" });
-  }, [filters.setFilters]);
+  }, [filters]);
 
   const clearPhase = useCallback(() => {
     filters.setFilters({ phase: "All" });
-  }, [filters.setFilters]);
+  }, [filters]);
 
   const clearTherapeuticArea = useCallback(() => {
     filters.setFilters({ therapeuticArea: "All" });
-  }, [filters.setFilters]);
+  }, [filters]);
 
   const clearStatus = useCallback(() => {
     filters.setFilters({ status: "All" });
-  }, [filters.setFilters]);
+  }, [filters]);
 
   const setSearchFilter = useCallback((search: string) => {
     filters.setFilters({ search });
-  }, [filters.setFilters]);
+  }, [filters]);
 
   return {
     hasActiveFilters,

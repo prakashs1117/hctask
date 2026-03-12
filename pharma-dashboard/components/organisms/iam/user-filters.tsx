@@ -18,7 +18,7 @@ export function UserFilters({
   statusFilter,
   setRoleFilter,
   setStatusFilter,
-  searchQuery,
+  searchQuery: _searchQuery,
   className
 }: UserFiltersProps) {
   const { t } = useTranslation();

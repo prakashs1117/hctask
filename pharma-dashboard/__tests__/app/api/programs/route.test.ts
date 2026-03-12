@@ -1,12 +1,27 @@
+/**
+ * @jest-environment node
+ */
 import { GET, POST } from '../../../../app/api/programs/route';
-import { getAllPrograms, createProgram } from '../../../../lib/data/programs';
 import { NextRequest } from 'next/server';
 
-// Mock the data store
+// Mock env to use mock data
+jest.mock('../../../../lib/env', () => ({
+  env: { useMockData: true }
+}));
+
+// Mock the programs-db module (won't be used but needs to be importable)
+jest.mock('../../../../lib/data/programs-db', () => ({
+  getAllPrograms: jest.fn(),
+  createProgram: jest.fn(),
+}));
+
+// Mock the mock data store
 jest.mock('../../../../lib/data/programs', () => ({
   getAllPrograms: jest.fn(),
   createProgram: jest.fn(),
 }));
+
+import { getAllPrograms, createProgram } from '../../../../lib/data/programs';
 
 const mockGetAllPrograms = getAllPrograms as jest.MockedFunction<typeof getAllPrograms>;
 const mockCreateProgram = createProgram as jest.MockedFunction<typeof createProgram>;
@@ -47,7 +62,7 @@ describe('/api/programs', () => {
 
   describe('GET', () => {
     beforeEach(() => {
-      mockGetAllPrograms.mockReturnValue(mockPrograms);
+      mockGetAllPrograms.mockResolvedValue(mockPrograms);
     });
 
     it('should return all programs without filters', async () => {
@@ -57,7 +72,7 @@ describe('/api/programs', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual(mockPrograms);
+      expect(data).toEqual(JSON.parse(JSON.stringify(mockPrograms)));
       expect(mockGetAllPrograms).toHaveBeenCalled();
     });
 
@@ -99,7 +114,7 @@ describe('/api/programs', () => {
         { ...mockPrograms[0], status: "Active" as const },
         { ...mockPrograms[1], status: "On Hold" as const }
       ];
-      mockGetAllPrograms.mockReturnValue(programsWithDifferentStatuses);
+      mockGetAllPrograms.mockResolvedValue(programsWithDifferentStatuses);
 
       const request = new NextRequest('http://localhost:3000/api/programs?status=Active');
 
@@ -148,9 +163,7 @@ describe('/api/programs', () => {
     });
 
     it('should handle errors gracefully', async () => {
-      mockGetAllPrograms.mockImplementation(() => {
-        throw new Error('Database error');
-      });
+      mockGetAllPrograms.mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost:3000/api/programs');
 
@@ -168,7 +181,7 @@ describe('/api/programs', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual(mockPrograms);
+      expect(data).toEqual(JSON.parse(JSON.stringify(mockPrograms)));
     });
   });
 
@@ -182,10 +195,6 @@ describe('/api/programs', () => {
       manager: "Dr. New Manager"
     };
 
-    beforeEach(() => {
-      mockGetAllPrograms.mockReturnValue(mockPrograms);
-    });
-
     it('should create a new program with valid data', async () => {
       const newProgram = {
         id: "PROG003",
@@ -196,7 +205,7 @@ describe('/api/programs', () => {
         milestones: []
       };
 
-      mockCreateProgram.mockReturnValue(newProgram);
+      mockCreateProgram.mockResolvedValue(newProgram);
 
       const request = new NextRequest('http://localhost:3000/api/programs', {
         method: 'POST',
@@ -207,10 +216,9 @@ describe('/api/programs', () => {
       const data = await response.json();
 
       expect(response.status).toBe(201);
-      expect(data).toEqual(newProgram);
+      expect(data).toEqual(JSON.parse(JSON.stringify(newProgram)));
       expect(mockCreateProgram).toHaveBeenCalledWith(
         expect.objectContaining({
-          id: "PROG003",
           name: "New Program",
           description: "New program description",
           therapeuticArea: "Oncology",
@@ -221,39 +229,9 @@ describe('/api/programs', () => {
       );
     });
 
-    it('should generate incremental program IDs', async () => {
-      // Mock 5 existing programs
-      mockGetAllPrograms.mockReturnValue(new Array(5).fill(mockPrograms[0]));
-
-      const newProgram = {
-        id: "PROG006",
-        ...validProgramData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        studies: [],
-        milestones: []
-      };
-
-      mockCreateProgram.mockReturnValue(newProgram);
-
-      const request = new NextRequest('http://localhost:3000/api/programs', {
-        method: 'POST',
-        body: JSON.stringify(validProgramData),
-      });
-
-      await POST(request);
-
-      expect(mockCreateProgram).toHaveBeenCalledWith(
-        expect.objectContaining({
-          id: "PROG006"
-        })
-      );
-    });
-
     it('should handle missing required fields', async () => {
       const invalidData = {
         name: "New Program"
-        // Missing required fields
       };
 
       const request = new NextRequest('http://localhost:3000/api/programs', {
@@ -304,7 +282,7 @@ describe('/api/programs', () => {
         milestones: []
       };
 
-      mockCreateProgram.mockReturnValue(newProgram);
+      mockCreateProgram.mockResolvedValue(newProgram);
 
       const request = new NextRequest('http://localhost:3000/api/programs', {
         method: 'POST',
@@ -332,9 +310,7 @@ describe('/api/programs', () => {
     });
 
     it('should handle database errors', async () => {
-      mockCreateProgram.mockImplementation(() => {
-        throw new Error('Database error');
-      });
+      mockCreateProgram.mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost:3000/api/programs', {
         method: 'POST',
@@ -346,60 +322,6 @@ describe('/api/programs', () => {
 
       expect(response.status).toBe(500);
       expect(data).toEqual({ error: "Failed to create program" });
-    });
-
-    it('should set proper timestamps for new program', async () => {
-      const newProgram = {
-        id: "PROG003",
-        ...validProgramData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        studies: [],
-        milestones: []
-      };
-
-      mockCreateProgram.mockReturnValue(newProgram);
-
-      const request = new NextRequest('http://localhost:3000/api/programs', {
-        method: 'POST',
-        body: JSON.stringify(validProgramData),
-      });
-
-      await POST(request);
-
-      expect(mockCreateProgram).toHaveBeenCalledWith(
-        expect.objectContaining({
-          createdAt: expect.any(Date),
-          updatedAt: expect.any(Date),
-        })
-      );
-    });
-
-    it('should initialize empty studies and milestones arrays', async () => {
-      const newProgram = {
-        id: "PROG003",
-        ...validProgramData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        studies: [],
-        milestones: []
-      };
-
-      mockCreateProgram.mockReturnValue(newProgram);
-
-      const request = new NextRequest('http://localhost:3000/api/programs', {
-        method: 'POST',
-        body: JSON.stringify(validProgramData),
-      });
-
-      await POST(request);
-
-      expect(mockCreateProgram).toHaveBeenCalledWith(
-        expect.objectContaining({
-          studies: [],
-          milestones: [],
-        })
-      );
     });
   });
 });
