@@ -1,0 +1,122 @@
+[
+  {
+    "id": "S001",
+    "programId": "P001",
+    "name": "ONCO-A-001",
+    "title": "Phase IIa Safety and Efficacy Study",
+    "enrollmentCount": 84,
+    "targetEnrollment": 120,
+    "milestone": "Recruitment",
+    "status": "Active",
+    "startDate": "2025-06-01T00:00:00.000Z",
+    "estimatedEndDate": "2026-12-31T00:00:00.000Z"
+  },
+  {
+    "id": "S002",
+    "programId": "P001",
+    "name": "ONCO-A-002",
+    "title": "Biomarker Analysis Study",
+    "enrollmentCount": 120,
+    "targetEnrollment": 120,
+    "milestone": "Analysis",
+    "status": "Active",
+    "startDate": "2025-03-15T00:00:00.000Z",
+    "estimatedEndDate": "2026-06-30T00:00:00.000Z"
+  },
+  {
+    "id": "S003",
+    "programId": "P001",
+    "name": "ONCO-A-003",
+    "title": "Combination Therapy Trial",
+    "enrollmentCount": 50,
+    "targetEnrollment": 80,
+    "milestone": "Initiation",
+    "status": "Active",
+    "startDate": "2026-01-10T00:00:00.000Z",
+    "estimatedEndDate": "2027-03-31T00:00:00.000Z"
+  },
+  {
+    "id": "S004",
+    "programId": "P001",
+    "name": "ONCO-A-004",
+    "title": "Long-term Safety Follow-up",
+    "enrollmentCount": 30,
+    "targetEnrollment": 80,
+    "milestone": "Initiation",
+    "status": "Active",
+    "startDate": "2026-02-01T00:00:00.000Z",
+    "estimatedEndDate": "2028-02-01T00:00:00.000Z"
+  },
+  {
+    "id": "S005",
+    "programId": "P002",
+    "name": "NEURO-B-001",
+    "title": "Phase III Efficacy Trial",
+    "enrollmentCount": 420,
+    "targetEnrollment": 450,
+    "milestone": "Analysis",
+    "status": "Active",
+    "startDate": "2024-09-01T00:00:00.000Z",
+    "estimatedEndDate": "2026-08-31T00:00:00.000Z"
+  },
+  {
+    "id": "S006",
+    "programId": "P002",
+    "name": "NEURO-B-002",
+    "title": "Cognitive Assessment Study",
+    "enrollmentCount": 200,
+    "targetEnrollment": 250,
+    "milestone": "Recruitment",
+    "status": "Active",
+    "startDate": "2025-01-15T00:00:00.000Z",
+    "estimatedEndDate": "2026-12-31T00:00:00.000Z"
+  },
+  {
+    "id": "S007",
+    "programId": "P003",
+    "name": "CARD-G-001",
+    "title": "First-in-Human Safety Study",
+    "enrollmentCount": 25,
+    "targetEnrollment": 60,
+    "milestone": "Initiation",
+    "status": "Active",
+    "startDate": "2026-02-01T00:00:00.000Z",
+    "estimatedEndDate": "2026-11-30T00:00:00.000Z"
+  },
+  {
+    "id": "S008",
+    "programId": "P003",
+    "name": "CARD-G-002",
+    "title": "Dose Escalation Study",
+    "enrollmentCount": 20,
+    "targetEnrollment": 60,
+    "milestone": "Initiation",
+    "status": "Active",
+    "startDate": "2026-03-01T00:00:00.000Z",
+    "estimatedEndDate": "2027-02-28T00:00:00.000Z"
+  },
+  {
+    "id": "S009",
+    "programId": "P004",
+    "name": "IMMUNO-D-001",
+    "title": "Phase IIb Efficacy and Safety",
+    "enrollmentCount": 180,
+    "targetEnrollment": 300,
+    "milestone": "Recruitment",
+    "status": "Active",
+    "startDate": "2025-04-01T00:00:00.000Z",
+    "estimatedEndDate": "2026-10-31T00:00:00.000Z"
+  },
+  {
+    "id": "S010",
+    "programId": "P005",
+    "name": "ONCO-Z-001",
+    "title": "Post-Marketing Surveillance",
+    "enrollmentCount": 890,
+    "targetEnrollment": 900,
+    "milestone": "Complete",
+    "status": "Active",
+    "startDate": "2023-01-01T00:00:00.000Z",
+    "estimatedEndDate": "2026-12-31T00:00:00.000Z"
+  }
+]

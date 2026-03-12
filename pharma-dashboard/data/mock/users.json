@@ -1,0 +1,83 @@
+[
+  {
+    "id": "U001",
+    "name": "Dr. Sarah Chen",
+    "email": "sarah.chen@pharmarcd.com",
+    "role": "Manager",
+    "assignedPrograms": ["P001", "P003", "P005", "P008"],
+    "status": "Active",
+    "createdAt": "2023-01-10T00:00:00.000Z"
+  },
+  {
+    "id": "U002",
+    "name": "Dr. Maria Lopez",
+    "email": "maria.lopez@pharmarcd.com",
+    "role": "Manager",
+    "assignedPrograms": ["P002", "P006"],
+    "status": "Active",
+    "createdAt": "2023-01-10T00:00:00.000Z"
+  },
+  {
+    "id": "U003",
+    "name": "Dr. Kim Park",
+    "email": "kim.park@pharmarcd.com",
+    "role": "Manager",
+    "assignedPrograms": ["P004", "P007"],
+    "status": "Active",
+    "createdAt": "2023-01-10T00:00:00.000Z"
+  },
+  {
+    "id": "U004",
+    "name": "James Okafor",
+    "email": "james.okafor@pharmarcd.com",
+    "role": "Staff",
+    "assignedPrograms": ["P001", "P004"],
+    "status": "Active",
+    "createdAt": "2024-03-15T00:00:00.000Z"
+  },
+  {
+    "id": "U005",
+    "name": "Priya Nair",
+    "email": "priya.nair@pharmarcd.com",
+    "role": "Staff",
+    "assignedPrograms": ["P001", "P003", "P005"],
+    "status": "Active",
+    "createdAt": "2024-05-20T00:00:00.000Z"
+  },
+  {
+    "id": "U006",
+    "name": "Michael Schmidt",
+    "email": "michael.schmidt@pharmarcd.com",
+    "role": "Staff",
+    "assignedPrograms": ["P002", "P006"],
+    "status": "Active",
+    "createdAt": "2024-07-10T00:00:00.000Z"
+  },
+  {
+    "id": "U007",
+    "name": "Lisa Anderson",
+    "email": "lisa.anderson@pharmarcd.com",
+    "role": "Staff",
+    "assignedPrograms": ["P007", "P008"],
+    "status": "Active",
+    "createdAt": "2025-01-12T00:00:00.000Z"
+  },
+  {
+    "id": "U008",
+    "name": "Tom Müller",
+    "email": "tom.muller@pharmarcd.com",
+    "role": "Viewer",
+    "assignedPrograms": ["P002"],
+    "status": "Inactive",
+    "createdAt": "2023-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "U009",
+    "name": "Anna Kowalski",
+    "email": "anna.kowalski@pharmarcd.com",
+    "role": "Viewer",
+    "assignedPrograms": ["P001", "P002", "P003"],
+    "status": "Active",
+    "createdAt": "2025-02-20T00:00:00.000Z"
+  }
+]
