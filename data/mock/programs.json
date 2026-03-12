@@ -1,0 +1,90 @@
+[
+  {
+    "id": "P001",
+    "name": "Onco-Alpha",
+    "description": "Novel immunotherapy targeting PD-L1 for advanced melanoma",
+    "therapeuticArea": "Oncology",
+    "phase": "Phase II",
+    "status": "Active",
+    "manager": "Dr. Sarah Chen",
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "updatedAt": "2026-03-10T00:00:00.000Z"
+  },
+  {
+    "id": "P002",
+    "name": "Neuro-Beta",
+    "description": "Small molecule for Alzheimer's disease treatment",
+    "therapeuticArea": "Neurology",
+    "phase": "Phase III",
+    "status": "Active",
+    "manager": "Dr. Maria Lopez",
+    "createdAt": "2023-06-20T00:00:00.000Z",
+    "updatedAt": "2026-03-08T00:00:00.000Z"
+  },
+  {
+    "id": "P003",
+    "name": "Card-Gamma",
+    "description": "Anti-hypertensive with novel mechanism of action",
+    "therapeuticArea": "Cardiology",
+    "phase": "Phase I",
+    "status": "Active",
+    "manager": "Dr. Sarah Chen",
+    "createdAt": "2025-11-10T00:00:00.000Z",
+    "updatedAt": "2026-03-05T00:00:00.000Z"
+  },
+  {
+    "id": "P004",
+    "name": "Immuno-Delta",
+    "description": "Biologic therapy for rheumatoid arthritis",
+    "therapeuticArea": "Immunology",
+    "phase": "Phase II",
+    "status": "Active",
+    "manager": "Dr. Kim Park",
+    "createdAt": "2024-08-01T00:00:00.000Z",
+    "updatedAt": "2026-03-12T00:00:00.000Z"
+  },
+  {
+    "id": "P005",
+    "name": "Onco-Zeta",
+    "description": "CAR-T cell therapy for leukemia",
+    "therapeuticArea": "Oncology",
+    "phase": "Phase IV",
+    "status": "Active",
+    "manager": "Dr. Sarah Chen",
+    "createdAt": "2022-03-15T00:00:00.000Z",
+    "updatedAt": "2026-03-11T00:00:00.000Z"
+  },
+  {
+    "id": "P006",
+    "name": "Neuro-Sigma",
+    "description": "Novel treatment for Parkinson's disease",
+    "therapeuticArea": "Neurology",
+    "phase": "Phase I",
+    "status": "Active",
+    "manager": "Dr. Maria Lopez",
+    "createdAt": "2025-09-01T00:00:00.000Z",
+    "updatedAt": "2026-03-09T00:00:00.000Z"
+  },
+  {
+    "id": "P007",
+    "name": "Derm-Epsilon",
+    "description": "Topical treatment for severe psoriasis",
+    "therapeuticArea": "Dermatology",
+    "phase": "Phase II",
+    "status": "Active",
+    "manager": "Dr. Kim Park",
+    "createdAt": "2024-05-12T00:00:00.000Z",
+    "updatedAt": "2026-03-07T00:00:00.000Z"
+  },
+  {
+    "id": "P008",
+    "name": "Endo-Theta",
+    "description": "Novel insulin analog for Type 2 diabetes",
+    "therapeuticArea": "Endocrinology",
+    "phase": "Phase III",
+    "status": "Active",
+    "manager": "Dr. Sarah Chen",
+    "createdAt": "2023-11-20T00:00:00.000Z",
+    "updatedAt": "2026-03-10T00:00:00.000Z"
+  }
+]
