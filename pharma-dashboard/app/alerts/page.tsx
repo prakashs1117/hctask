@@ -115,7 +115,6 @@ export default function AlertsPage() {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          {searchQuery && <FilterBadge label={searchQuery} onRemove={() => setSearchQuery("")} isSearch />}
           {statusFilter !== "All" && <FilterBadge label={statusFilter} onRemove={() => setStatusFilter("All")} />}
           {channelFilter !== "All" && <FilterBadge label={channelFilter} onRemove={() => setChannelFilter("All")} />}
         </div>

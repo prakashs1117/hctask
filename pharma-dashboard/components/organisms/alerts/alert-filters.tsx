@@ -18,7 +18,6 @@ export function AlertFilters({
   channelFilter,
   setStatusFilter,
   setChannelFilter,
-  searchQuery,
   className
 }: AlertFiltersProps) {
   const { t } = useTranslation();
@@ -103,10 +102,6 @@ export function AlertFilters({
             <div className="flex justify-between">
               <span>{t("filters.channel")}:</span>
               <span className="font-medium">{channelFilter}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>{t("filters.search")}:</span>
-              <span className="font-medium">{searchQuery || t("filters.none")}</span>
             </div>
           </div>
         </div>

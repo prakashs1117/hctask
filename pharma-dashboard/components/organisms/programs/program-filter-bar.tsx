@@ -61,7 +61,6 @@ export function ProgramFilterBar({
 
       <div className="flex items-center justify-between sm:justify-end gap-3">
         <div className="flex items-center gap-2 flex-wrap">
-          {filters.search && <FilterBadge label={filters.search} onRemove={() => filters.setFilters({ search: "" })} isSearch />}
           {filters.phase !== "All" && <FilterBadge label={filters.phase} onRemove={() => filters.setFilters({ phase: "All" })} />}
           {filters.therapeuticArea !== "All" && (
             <FilterBadge label={filters.therapeuticArea} onRemove={() => filters.setFilters({ therapeuticArea: "All" })} />

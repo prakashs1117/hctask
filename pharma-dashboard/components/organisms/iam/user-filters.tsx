@@ -101,10 +101,6 @@ export function UserFilters({
               <span>{t("filters.status")}:</span>
               <span className="font-medium">{statusFilter}</span>
             </div>
-            <div className="flex justify-between">
-              <span>{t("filters.search")}:</span>
-              <span className="font-medium">{searchQuery || t("filters.none")}</span>
-            </div>
           </div>
         </div>
 

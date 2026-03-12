@@ -62,7 +62,6 @@ export function IAMFilterBar({
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
-        {searchQuery && <FilterBadge label={searchQuery} onRemove={() => setSearchQuery("")} isSearch />}
         {roleFilter !== "All" && <FilterBadge label={roleFilter} onRemove={() => setRoleFilter("All")} />}
         {statusFilter !== "All" && <FilterBadge label={statusFilter} onRemove={() => setStatusFilter("All")} />}
       </div>
