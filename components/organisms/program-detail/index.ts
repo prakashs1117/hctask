@@ -1,8 +1,0 @@
-export { MetricsGrid } from "./metrics-grid";
-export { MilestoneItem } from "./milestone-item";
-export { MilestonesSection } from "./milestones-section";
-export { ProgramHeaderInfo } from "./program-header-info";
-export { ProgramInfoCard } from "./program-info-card";
-export { ProgramNavigationHeader } from "./program-navigation-header";
-export { StudiesSection } from "./studies-section";
-export { StudyCard } from "./study-card";
