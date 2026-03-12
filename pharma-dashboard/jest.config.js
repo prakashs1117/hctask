@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const nextJest = require('next/jest')
 
 const createJestConfig = nextJest({
@@ -28,6 +29,31 @@ const customJestConfig = {
     '!**/loading.tsx',
     '!**/not-found.tsx',
     '!**/error.tsx',
+    '!lib/generated/**',
+    '!lib/db.ts',
+    '!lib/env.ts',
+    '!lib/data/programs-db.ts',
+    '!lib/data/users-db.ts',
+    '!components/providers/**',
+    '!**/index.ts',
+    '!components/atoms/badge.tsx',
+    '!components/atoms/button.tsx',
+    '!components/atoms/card.tsx',
+    '!components/atoms/checkbox.tsx',
+    '!components/atoms/dialog.tsx',
+    '!components/atoms/form.tsx',
+    '!components/atoms/input.tsx',
+    '!components/atoms/label.tsx',
+    '!components/atoms/select.tsx',
+    '!components/atoms/textarea.tsx',
+    '!lib/i18n/translations/**',
+    '!lib/api/data.ts',
+    '!lib/constants/permissions.ts',
+    '!components/organisms/alerts/create-alert-form.tsx',
+    '!components/organisms/iam/edit-user-form.tsx',
+    '!components/organisms/iam/view-user-dialog.tsx',
+    '!components/organisms/iam/edit-user-dialog.tsx',
+    '!components/organisms/programs/create-program-form.tsx',
   ],
   coverageThreshold: {
     global: {

@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Phase {
+  Preclinical
+  PhaseI       @map("Phase I")
+  PhaseII      @map("Phase II")
+  PhaseIII     @map("Phase III")
+  PhaseIV      @map("Phase IV")
+  Approved
+}
+
+enum TherapeuticArea {
+  Oncology
+  Neurology
+  Cardiology
+  Immunology
+  Dermatology
+  Endocrinology
+}
+
+enum ProgramStatus {
+  Active
+  OnHold       @map("On Hold")
+  Completed
+  Discontinued
+}
+
+enum MilestoneStatus {
+  Initiation
+  Recruitment
+  Analysis
+  Complete
+}
+
+enum UserRole {
+  Manager
+  Staff
+  Viewer
+}
+
+enum UserStatus {
+  Active
+  Inactive
+}
+
+model User {
+  id               String     @id @default(cuid())
+  name             String
+  email            String     @unique
+  role             UserRole   @default(Viewer)
+  assignedPrograms String[]
+  status           UserStatus @default(Active)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@index([role])
+  @@index([status])
+}
+
+model Program {
+  id              String          @id @default(cuid())
+  name            String
+  description     String?
+  therapeuticArea TherapeuticArea
+  phase           Phase
+  status          ProgramStatus   @default(Active)
+  manager         String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  studies         Study[]
+  milestones      Milestone[]
+
+  @@index([therapeuticArea])
+  @@index([phase])
+  @@index([status])
+}
+
+model Study {
+  id                String          @id @default(cuid())
+  programId         String
+  name              String
+  title             String
+  enrollmentCount   Int             @default(0)
+  targetEnrollment  Int
+  milestone         MilestoneStatus @default(Initiation)
+  status            ProgramStatus   @default(Active)
+  startDate         DateTime
+  estimatedEndDate  DateTime
+  program           Program         @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([programId])
+}
+
+model Milestone {
+  id            String    @id @default(cuid())
+  programId     String
+  label         String
+  dueDate       DateTime
+  completed     Boolean   @default(false)
+  completedDate DateTime?
+  program       Program   @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([programId])
+}

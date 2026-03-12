@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import {
@@ -53,13 +54,13 @@ export function CreateProgramDialog({ canCreate }: CreateProgramDialogProps) {
       // Close dialog and show success message
       setIsOpen(false);
 
-      // You could add a toast notification here
-      alert("Program created successfully!");
+      toast.success("Program created successfully!");
 
       // Refresh the page to show the new program
       window.location.reload();
     } catch (error) {
       console.error("Failed to create program:", error);
+      toast.error("Failed to create program. Please try again.");
       throw error; // Re-throw so form can handle it
     } finally {
       setIsLoading(false);

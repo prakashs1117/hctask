@@ -247,7 +247,7 @@ describe('EditProgramForm', () => {
     it('should render all status options', () => {
       render(<EditProgramForm {...defaultProps} />);
 
-      const expectedStatuses = ['Active', 'On Hold', 'Closed', 'Discontinued'];
+      const expectedStatuses = ['Active', 'On Hold', 'Completed', 'Discontinued'];
 
       expectedStatuses.forEach(status => {
         expect(screen.getByRole('option', { name: status })).toBeInTheDocument();

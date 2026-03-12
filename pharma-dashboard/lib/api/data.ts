@@ -27,19 +27,19 @@ export async function getPrograms(): Promise<Program[]> {
     const programs = await response.json();
 
     // Convert date strings to Date objects
-    return programs.map((program: any) => ({
+    return programs.map((program: Record<string, unknown>) => ({
       ...program,
-      createdAt: new Date(program.createdAt),
-      updatedAt: new Date(program.updatedAt),
-      studies: program.studies.map((study: any) => ({
+      createdAt: new Date(program.createdAt as string),
+      updatedAt: new Date(program.updatedAt as string),
+      studies: (program.studies as Record<string, unknown>[]).map((study: Record<string, unknown>) => ({
         ...study,
-        startDate: new Date(study.startDate),
-        estimatedEndDate: new Date(study.estimatedEndDate),
+        startDate: new Date(study.startDate as string),
+        estimatedEndDate: new Date(study.estimatedEndDate as string),
       })),
-      milestones: program.milestones.map((milestone: any) => ({
+      milestones: (program.milestones as Record<string, unknown>[]).map((milestone: Record<string, unknown>) => ({
         ...milestone,
-        dueDate: new Date(milestone.dueDate),
-        completedDate: milestone.completedDate ? new Date(milestone.completedDate) : undefined,
+        dueDate: new Date(milestone.dueDate as string),
+        completedDate: milestone.completedDate ? new Date(milestone.completedDate as string) : undefined,
       })),
     }));
   } catch (error) {
@@ -92,15 +92,15 @@ export async function getProgramById(id: string): Promise<Program | null> {
       ...program,
       createdAt: new Date(program.createdAt),
       updatedAt: new Date(program.updatedAt),
-      studies: program.studies.map((study: any) => ({
+      studies: (program.studies as Record<string, unknown>[]).map((study: Record<string, unknown>) => ({
         ...study,
-        startDate: new Date(study.startDate),
-        estimatedEndDate: new Date(study.estimatedEndDate),
+        startDate: new Date(study.startDate as string),
+        estimatedEndDate: new Date(study.estimatedEndDate as string),
       })),
-      milestones: program.milestones.map((milestone: any) => ({
+      milestones: (program.milestones as Record<string, unknown>[]).map((milestone: Record<string, unknown>) => ({
         ...milestone,
-        dueDate: new Date(milestone.dueDate),
-        completedDate: milestone.completedDate ? new Date(milestone.completedDate) : undefined,
+        dueDate: new Date(milestone.dueDate as string),
+        completedDate: milestone.completedDate ? new Date(milestone.completedDate as string) : undefined,
       })),
     };
   } catch (error) {
@@ -175,9 +175,9 @@ export async function getAlerts(): Promise<Alert[]> {
     const alerts = await response.json();
 
     // Convert date strings to Date objects
-    return alerts.map((alert: any) => ({
+    return alerts.map((alert: Record<string, unknown>) => ({
       ...alert,
-      deadline: new Date(alert.deadline),
+      deadline: new Date(alert.deadline as string),
     }));
   } catch (error) {
     console.error('Failed to fetch alerts:', error);

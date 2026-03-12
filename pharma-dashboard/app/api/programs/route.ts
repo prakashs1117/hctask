@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { type Program, type TherapeuticArea, type Phase, type ProgramStatus } from "@/types";
-import { getAllPrograms, createProgram } from "@/lib/data/programs";
+import { env } from "@/lib/env";
+import * as mockData from "@/lib/data/programs";
+import * as dbData from "@/lib/data/programs-db";
+
+const { getAllPrograms, createProgram } = env.useMockData ? mockData : dbData;
 
 // GET /api/programs - Get all programs
 export async function GET(request: NextRequest) {
@@ -11,7 +14,7 @@ export async function GET(request: NextRequest) {
     const therapeuticArea = searchParams.get("therapeuticArea") || "All";
     const status = searchParams.get("status") || "All";
 
-    let filteredPrograms = getAllPrograms();
+    let filteredPrograms = await getAllPrograms();
 
     // Apply search filter
     if (search) {
@@ -61,27 +64,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate new program ID
-    const programs = getAllPrograms();
-    const newId = `PROG${String(programs.length + 1).padStart(3, "0")}`;
-
-    // Create new program
-    const newProgram: Program = {
-      id: newId,
+    const createdProgram = await createProgram({
       name: body.name,
       description: body.description || "",
-      therapeuticArea: body.therapeuticArea as TherapeuticArea,
-      phase: body.phase as Phase,
-      status: body.status as ProgramStatus,
+      therapeuticArea: body.therapeuticArea,
+      phase: body.phase,
+      status: body.status,
       manager: body.manager,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      studies: [],
-      milestones: [],
-    };
-
-    // Add to programs array
-    const createdProgram = createProgram(newProgram);
+    });
 
     return NextResponse.json(createdProgram, { status: 201 });
   } catch (error) {

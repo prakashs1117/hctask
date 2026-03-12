@@ -22,10 +22,10 @@ export function UserTable({ users, isLoading, canManageUsers, onClearFilters }: 
   return (
     <Card>
       <CardContent className="p-0">
-        <div className="border-b px-6 py-4">
+        <div className="border-b px-4 py-3">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold flex items-center gap-2">
-              <FileText className="h-4 w-4" />
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <FileText className="h-3.5 w-3.5" />
               {t("iam.userDirectory")}
             </h3>
             <Badge variant="outline">{users.length} {t("navigation.iam").toLowerCase()}</Badge>
@@ -99,10 +99,10 @@ function UserRow({ user, canManageUsers }: { user: User; canManageUsers: boolean
   return (
     <tr className="transition-colors hover:bg-muted/30">
       <td className="px-4 py-3">
-        <div className="font-semibold text-foreground">{user.name}</div>
+        <div className="text-sm font-medium text-foreground">{user.name}</div>
       </td>
       <td className="px-4 py-3">
-        <div className="text-sm text-muted-foreground">{user.email}</div>
+        <div className="text-xs text-muted-foreground">{user.email}</div>
       </td>
       <td className="px-4 py-3">
         <Badge
@@ -141,7 +141,7 @@ function UserRow({ user, canManageUsers }: { user: User; canManageUsers: boolean
               user.status === "Active" ? "bg-green-500" : "bg-muted-foreground"
             }`}
           />
-          <span className="text-sm font-medium">{user.status}</span>
+          <span className="text-xs font-medium">{user.status}</span>
         </div>
       </td>
       {canManageUsers && (

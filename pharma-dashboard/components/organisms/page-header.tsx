@@ -27,12 +27,12 @@ export function PageHeader({
     <div className={cn("flex items-center justify-between", className)}>
       <div className="flex items-center gap-3">
         {Icon && (
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Icon className="h-5 w-5" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Icon className="h-4 w-4" />
           </div>
         )}
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">{title}</h1>
+          <h1 className="text-lg sm:text-xl font-semibold tracking-tight">{title}</h1>
           {description && (
             <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-snug">{description}</p>
           )}

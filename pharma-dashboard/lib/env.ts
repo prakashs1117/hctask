@@ -18,6 +18,9 @@ export const env = {
   // Feature Flags
   enableMockData: process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA === "true",
 
+  // Database
+  databaseUrl: process.env.DATABASE_URL || "",
+
   // Helpers
   get isProduction() {
     return process.env.NODE_ENV === "production";
@@ -26,6 +29,6 @@ export const env = {
     return process.env.NODE_ENV === "development";
   },
   get useMockData() {
-    return this.enableMockData || !this.apiBaseUrl;
+    return this.enableMockData || !this.databaseUrl;
   },
 } as const;
