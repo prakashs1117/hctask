@@ -85,4 +85,37 @@ describe('ProgramFilters', () => {
     render(<ProgramFilters />);
     expect(screen.getByText('Active Filters')).toBeInTheDocument();
   });
+
+  it('should change therapeutic area filter via select', () => {
+    render(<ProgramFilters />);
+    const selects = screen.getAllByRole('combobox');
+    fireEvent.change(selects[1], { target: { value: 'Oncology' } });
+    expect(useFilterStore.getState().therapeuticArea).toBe('Oncology');
+  });
+
+  it('should apply Oncology quick filter', () => {
+    render(<ProgramFilters />);
+    fireEvent.click(screen.getByText('Oncology Only'));
+    expect(useFilterStore.getState().therapeuticArea).toBe('Oncology');
+  });
+
+  it('should clear phase filter when X is clicked', () => {
+    act(() => {
+      useFilterStore.getState().setFilters({ phase: 'Phase III' });
+    });
+    const { container } = render(<ProgramFilters />);
+    const xIcons = container.querySelectorAll('.cursor-pointer');
+    fireEvent.click(xIcons[0]);
+    expect(useFilterStore.getState().phase).toBe('All');
+  });
+
+  it('should clear therapeutic area filter when X is clicked', () => {
+    act(() => {
+      useFilterStore.getState().setFilters({ therapeuticArea: 'Oncology' });
+    });
+    const { container } = render(<ProgramFilters />);
+    const xIcons = container.querySelectorAll('.cursor-pointer');
+    fireEvent.click(xIcons[0]);
+    expect(useFilterStore.getState().therapeuticArea).toBe('All');
+  });
 });
