@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import AlertsPage from '../../../app/alerts/page';
 
 jest.mock('../../../lib/hooks/useTranslation', () => ({
@@ -137,5 +137,23 @@ describe('AlertsPage', () => {
     render(<AlertsPage />);
     const snoozeButtons = screen.getAllByText('Snooze');
     expect(snoozeButtons.length).toBeGreaterThan(0);
+  });
+
+  it('should filter alerts by search query', () => {
+    render(<AlertsPage />);
+    const input = screen.getByPlaceholderText('Search alerts...');
+    fireEvent.change(input, { target: { value: 'Alpha' } });
+    expect(screen.getByText('Program Alpha')).toBeInTheDocument();
+  });
+
+  it('should render filter toggle button', () => {
+    render(<AlertsPage />);
+    expect(screen.getByText('Filters')).toBeInTheDocument();
+  });
+
+  it('should render table headers', () => {
+    render(<AlertsPage />);
+    expect(screen.getByText('Program')).toBeInTheDocument();
+    expect(screen.getByText('Deadline')).toBeInTheDocument();
   });
 });
