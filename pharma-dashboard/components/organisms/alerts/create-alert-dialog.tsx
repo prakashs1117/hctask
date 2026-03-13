@@ -43,7 +43,7 @@ export function CreateAlertDialog({ canCreate }: CreateAlertDialogProps) {
   const handleSubmit = async (data: CreateAlertFormData) => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/alerts", {
+      const response = await fetch("/api/v1/alerts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

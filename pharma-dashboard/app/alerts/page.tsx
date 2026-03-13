@@ -38,7 +38,7 @@ export default function AlertsPage() {
   // Dismiss alert mutation
   const dismissMutation = useMutation({
     mutationFn: async (alertId: string) => {
-      const response = await fetch(`/api/alerts/${alertId}`, {
+      const response = await fetch(`/api/v1/alerts/${alertId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "Dismissed" }),
@@ -60,7 +60,7 @@ export default function AlertsPage() {
     mutationFn: async (alert: { id: string; deadline: Date }) => {
       const newDeadline = new Date(alert.deadline);
       newDeadline.setDate(newDeadline.getDate() + 7);
-      const response = await fetch(`/api/alerts/${alert.id}`, {
+      const response = await fetch(`/api/v1/alerts/${alert.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ deadline: newDeadline.toISOString(), status: "Active" }),
@@ -80,7 +80,7 @@ export default function AlertsPage() {
   // Delete alert mutation
   const deleteMutation = useMutation({
     mutationFn: async (alertId: string) => {
-      const response = await fetch(`/api/alerts/${alertId}`, {
+      const response = await fetch(`/api/v1/alerts/${alertId}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete alert");

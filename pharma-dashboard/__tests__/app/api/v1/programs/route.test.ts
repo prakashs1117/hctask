@@ -1,27 +1,27 @@
 /**
  * @jest-environment node
  */
-import { GET, POST } from '../../../../app/api/programs/route';
+import { GET, POST } from '../../../../../app/api/v1/programs/route';
 import { NextRequest } from 'next/server';
 
 // Mock env to use mock data
-jest.mock('../../../../lib/env', () => ({
+jest.mock('../../../../../lib/env', () => ({
   env: { useMockData: true }
 }));
 
 // Mock the programs-db module (won't be used but needs to be importable)
-jest.mock('../../../../lib/data/programs-db', () => ({
+jest.mock('../../../../../lib/data/programs-db', () => ({
   getAllPrograms: jest.fn(),
   createProgram: jest.fn(),
 }));
 
 // Mock the mock data store
-jest.mock('../../../../lib/data/programs', () => ({
+jest.mock('../../../../../lib/data/programs', () => ({
   getAllPrograms: jest.fn(),
   createProgram: jest.fn(),
 }));
 
-import { getAllPrograms, createProgram } from '../../../../lib/data/programs';
+import { getAllPrograms, createProgram } from '../../../../../lib/data/programs';
 
 const mockGetAllPrograms = getAllPrograms as jest.MockedFunction<typeof getAllPrograms>;
 const mockCreateProgram = createProgram as jest.MockedFunction<typeof createProgram>;
@@ -55,7 +55,7 @@ const mockPrograms = [
   }
 ];
 
-describe('/api/programs', () => {
+describe('/api/v1/programs', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -66,47 +66,50 @@ describe('/api/programs', () => {
     });
 
     it('should return all programs without filters', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs');
 
       const response = await GET(request);
-      const data = await response.json();
+      const json = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual(JSON.parse(JSON.stringify(mockPrograms)));
+      expect(json.data).toEqual(JSON.parse(JSON.stringify(mockPrograms)));
+      expect(json.totalCount).toBe(2);
       expect(mockGetAllPrograms).toHaveBeenCalled();
     });
 
     it('should filter programs by search term', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs?search=program 1');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs?search=program 1');
 
       const response = await GET(request);
-      const data = await response.json();
+      const json = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toHaveLength(1);
-      expect(data[0].name).toBe("Test Program 1");
+      expect(json.data).toHaveLength(1);
+      expect(json.data[0].name).toBe("Test Program 1");
+      expect(json.totalCount).toBe(2);
     });
 
     it('should filter programs by phase', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs?phase=Phase II');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs?phase=Phase II');
 
       const response = await GET(request);
-      const data = await response.json();
+      const json = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toHaveLength(1);
-      expect(data[0].phase).toBe("Phase II");
+      expect(json.data).toHaveLength(1);
+      expect(json.data[0].phase).toBe("Phase II");
+      expect(json.totalCount).toBe(2);
     });
 
     it('should filter programs by therapeutic area', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs?therapeuticArea=Oncology');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs?therapeuticArea=Oncology');
 
       const response = await GET(request);
-      const data = await response.json();
+      const json = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toHaveLength(1);
-      expect(data[0].therapeuticArea).toBe("Oncology");
+      expect(json.data).toHaveLength(1);
+      expect(json.data[0].therapeuticArea).toBe("Oncology");
     });
 
     it('should filter programs by status', async () => {
@@ -116,25 +119,26 @@ describe('/api/programs', () => {
       ];
       mockGetAllPrograms.mockResolvedValue(programsWithDifferentStatuses);
 
-      const request = new NextRequest('http://localhost:3000/api/programs?status=Active');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs?status=Active');
 
       const response = await GET(request);
-      const data = await response.json();
+      const json = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toHaveLength(1);
-      expect(data[0].status).toBe("Active");
+      expect(json.data).toHaveLength(1);
+      expect(json.data[0].status).toBe("Active");
+      expect(json.totalCount).toBe(2);
     });
 
     it('should apply multiple filters simultaneously', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs?search=program&phase=Phase I&therapeuticArea=Oncology');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs?search=program&phase=Phase I&therapeuticArea=Oncology');
 
       const response = await GET(request);
-      const data = await response.json();
+      const json = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toHaveLength(1);
-      expect(data[0]).toMatchObject({
+      expect(json.data).toHaveLength(1);
+      expect(json.data[0]).toMatchObject({
         name: "Test Program 1",
         phase: "Phase I",
         therapeuticArea: "Oncology"
@@ -142,30 +146,31 @@ describe('/api/programs', () => {
     });
 
     it('should return empty array when no programs match filters', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs?search=nonexistent');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs?search=nonexistent');
 
       const response = await GET(request);
-      const data = await response.json();
+      const json = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual([]);
+      expect(json.data).toEqual([]);
+      expect(json.totalCount).toBe(2);
     });
 
     it('should search in program description and manager fields', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs?search=smith');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs?search=smith');
 
       const response = await GET(request);
-      const data = await response.json();
+      const json = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toHaveLength(1);
-      expect(data[0].manager).toBe("Dr. Smith");
+      expect(json.data).toHaveLength(1);
+      expect(json.data[0].manager).toBe("Dr. Smith");
     });
 
     it('should handle errors gracefully', async () => {
       mockGetAllPrograms.mockRejectedValue(new Error('Database error'));
 
-      const request = new NextRequest('http://localhost:3000/api/programs');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs');
 
       const response = await GET(request);
       const data = await response.json();
@@ -175,13 +180,14 @@ describe('/api/programs', () => {
     });
 
     it('should ignore "All" filter values', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs?phase=All&therapeuticArea=All&status=All');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs?phase=All&therapeuticArea=All&status=All');
 
       const response = await GET(request);
-      const data = await response.json();
+      const json = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual(JSON.parse(JSON.stringify(mockPrograms)));
+      expect(json.data).toEqual(JSON.parse(JSON.stringify(mockPrograms)));
+      expect(json.totalCount).toBe(2);
     });
   });
 
@@ -207,7 +213,7 @@ describe('/api/programs', () => {
 
       mockCreateProgram.mockResolvedValue(newProgram);
 
-      const request = new NextRequest('http://localhost:3000/api/programs', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs', {
         method: 'POST',
         body: JSON.stringify(validProgramData),
       });
@@ -234,7 +240,7 @@ describe('/api/programs', () => {
         name: "New Program"
       };
 
-      const request = new NextRequest('http://localhost:3000/api/programs', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs', {
         method: 'POST',
         body: JSON.stringify(invalidData),
       });
@@ -253,7 +259,7 @@ describe('/api/programs', () => {
         const invalidData = { ...validProgramData };
         delete invalidData[field as keyof typeof invalidData];
 
-        const request = new NextRequest('http://localhost:3000/api/programs', {
+        const request = new NextRequest('http://localhost:3000/api/v1/programs', {
           method: 'POST',
           body: JSON.stringify(invalidData),
         });
@@ -284,7 +290,7 @@ describe('/api/programs', () => {
 
       mockCreateProgram.mockResolvedValue(newProgram);
 
-      const request = new NextRequest('http://localhost:3000/api/programs', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs', {
         method: 'POST',
         body: JSON.stringify(dataWithoutDescription),
       });
@@ -297,7 +303,7 @@ describe('/api/programs', () => {
     });
 
     it('should handle JSON parsing errors', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs', {
         method: 'POST',
         body: 'invalid json',
       });
@@ -312,7 +318,7 @@ describe('/api/programs', () => {
     it('should handle database errors', async () => {
       mockCreateProgram.mockRejectedValue(new Error('Database error'));
 
-      const request = new NextRequest('http://localhost:3000/api/programs', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs', {
         method: 'POST',
         body: JSON.stringify(validProgramData),
       });

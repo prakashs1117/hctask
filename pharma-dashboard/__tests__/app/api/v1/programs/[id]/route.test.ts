@@ -1,29 +1,29 @@
 /**
  * @jest-environment node
  */
-import { GET, PUT, DELETE } from '../../../../../app/api/programs/[id]/route';
+import { GET, PUT, DELETE } from '../../../../../../app/api/v1/programs/[id]/route';
 import { NextRequest } from 'next/server';
 
 // Mock env to use mock data
-jest.mock('../../../../../lib/env', () => ({
+jest.mock('../../../../../../lib/env', () => ({
   env: { useMockData: true }
 }));
 
 // Mock the programs-db module (won't be used but needs to be importable)
-jest.mock('../../../../../lib/data/programs-db', () => ({
+jest.mock('../../../../../../lib/data/programs-db', () => ({
   getProgramById: jest.fn(),
   updateProgram: jest.fn(),
   deleteProgram: jest.fn(),
 }));
 
 // Mock the mock data store
-jest.mock('../../../../../lib/data/programs', () => ({
+jest.mock('../../../../../../lib/data/programs', () => ({
   getProgramById: jest.fn(),
   updateProgram: jest.fn(),
   deleteProgram: jest.fn(),
 }));
 
-import { getProgramById, updateProgram, deleteProgram } from '../../../../../lib/data/programs';
+import { getProgramById, updateProgram, deleteProgram } from '../../../../../../lib/data/programs';
 
 const mockGetProgramById = getProgramById as jest.MockedFunction<typeof getProgramById>;
 const mockUpdateProgram = updateProgram as jest.MockedFunction<typeof updateProgram>;
@@ -43,7 +43,7 @@ const mockProgram = {
   milestones: []
 };
 
-describe('/api/programs/[id]', () => {
+describe('/api/v1/programs/[id]', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -52,7 +52,7 @@ describe('/api/programs/[id]', () => {
     it('should return program when id exists', async () => {
       mockGetProgramById.mockResolvedValue(mockProgram);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001');
       const params = Promise.resolve({ id: 'PROG001' });
 
       const response = await GET(request, { params });
@@ -66,7 +66,7 @@ describe('/api/programs/[id]', () => {
     it('should return 404 when program not found', async () => {
       mockGetProgramById.mockResolvedValue(undefined);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/NONEXISTENT');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/NONEXISTENT');
       const params = Promise.resolve({ id: 'NONEXISTENT' });
 
       const response = await GET(request, { params });
@@ -79,7 +79,7 @@ describe('/api/programs/[id]', () => {
     it('should handle database errors', async () => {
       mockGetProgramById.mockRejectedValue(new Error('Database error'));
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001');
       const params = Promise.resolve({ id: 'PROG001' });
 
       const response = await GET(request, { params });
@@ -92,7 +92,7 @@ describe('/api/programs/[id]', () => {
     it('should handle empty id parameter', async () => {
       mockGetProgramById.mockResolvedValue(undefined);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/');
       const params = Promise.resolve({ id: '' });
 
       const response = await GET(request, { params });
@@ -122,7 +122,7 @@ describe('/api/programs/[id]', () => {
 
       mockUpdateProgram.mockResolvedValue(updatedProgram);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
         method: 'PUT',
         body: JSON.stringify(validUpdateData),
       });
@@ -138,7 +138,7 @@ describe('/api/programs/[id]', () => {
     it('should return 404 when program not found', async () => {
       mockUpdateProgram.mockResolvedValue(null);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/NONEXISTENT', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/NONEXISTENT', {
         method: 'PUT',
         body: JSON.stringify(validUpdateData),
       });
@@ -156,7 +156,7 @@ describe('/api/programs/[id]', () => {
         name: "Updated Program"
       };
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
         method: 'PUT',
         body: JSON.stringify(invalidData),
       });
@@ -176,7 +176,7 @@ describe('/api/programs/[id]', () => {
         const invalidData = { ...validUpdateData };
         delete invalidData[field as keyof typeof invalidData];
 
-        const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+        const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
           method: 'PUT',
           body: JSON.stringify(invalidData),
         });
@@ -208,7 +208,7 @@ describe('/api/programs/[id]', () => {
 
       mockUpdateProgram.mockResolvedValue(updatedProgram);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
         method: 'PUT',
         body: JSON.stringify(partialUpdateData),
       });
@@ -223,7 +223,7 @@ describe('/api/programs/[id]', () => {
     });
 
     it('should handle JSON parsing errors', async () => {
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
         method: 'PUT',
         body: 'invalid json',
       });
@@ -239,7 +239,7 @@ describe('/api/programs/[id]', () => {
     it('should handle database errors', async () => {
       mockUpdateProgram.mockRejectedValue(new Error('Database error'));
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
         method: 'PUT',
         body: JSON.stringify(validUpdateData),
       });
@@ -257,7 +257,7 @@ describe('/api/programs/[id]', () => {
     it('should delete program successfully', async () => {
       mockDeleteProgram.mockResolvedValue(true);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
         method: 'DELETE'
       });
       const params = Promise.resolve({ id: 'PROG001' });
@@ -273,7 +273,7 @@ describe('/api/programs/[id]', () => {
     it('should return 404 when program not found', async () => {
       mockDeleteProgram.mockResolvedValue(false);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/NONEXISTENT', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/NONEXISTENT', {
         method: 'DELETE'
       });
       const params = Promise.resolve({ id: 'NONEXISTENT' });
@@ -288,7 +288,7 @@ describe('/api/programs/[id]', () => {
     it('should handle database errors', async () => {
       mockDeleteProgram.mockRejectedValue(new Error('Database error'));
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
         method: 'DELETE'
       });
       const params = Promise.resolve({ id: 'PROG001' });
@@ -303,7 +303,7 @@ describe('/api/programs/[id]', () => {
     it('should handle empty id parameter', async () => {
       mockDeleteProgram.mockResolvedValue(false);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/', {
         method: 'DELETE'
       });
       const params = Promise.resolve({ id: '' });
@@ -320,7 +320,7 @@ describe('/api/programs/[id]', () => {
     it('should handle async params correctly for GET', async () => {
       mockGetProgramById.mockResolvedValue(mockProgram);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001');
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001');
       const params = Promise.resolve({ id: 'PROG001' });
 
       await GET(request, { params });
@@ -332,7 +332,7 @@ describe('/api/programs/[id]', () => {
       const updatedProgram = { ...mockProgram, name: 'Updated' };
       mockUpdateProgram.mockResolvedValue(updatedProgram);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
         method: 'PUT',
         body: JSON.stringify({
           name: 'Updated',
@@ -352,7 +352,7 @@ describe('/api/programs/[id]', () => {
     it('should handle async params correctly for DELETE', async () => {
       mockDeleteProgram.mockResolvedValue(true);
 
-      const request = new NextRequest('http://localhost:3000/api/programs/PROG001', {
+      const request = new NextRequest('http://localhost:3000/api/v1/programs/PROG001', {
         method: 'DELETE'
       });
       const params = Promise.resolve({ id: 'PROG001' });

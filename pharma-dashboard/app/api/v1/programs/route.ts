@@ -5,7 +5,7 @@ import * as dbData from "@/lib/data/programs-db";
 
 const { getAllPrograms, createProgram } = env.useMockData ? mockData : dbData;
 
-// GET /api/programs - Get all programs
+// GET /api/v1/programs - Get all programs
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -14,7 +14,8 @@ export async function GET(request: NextRequest) {
     const therapeuticArea = searchParams.get("therapeuticArea") || "All";
     const status = searchParams.get("status") || "All";
 
-    let filteredPrograms = await getAllPrograms();
+    const allPrograms = await getAllPrograms();
+    let filteredPrograms = allPrograms;
 
     // Apply search filter
     if (search) {
@@ -43,14 +44,14 @@ export async function GET(request: NextRequest) {
       filteredPrograms = filteredPrograms.filter((program) => program.status === status);
     }
 
-    return NextResponse.json(filteredPrograms);
+    return NextResponse.json({ data: filteredPrograms, totalCount: allPrograms.length });
   } catch (error) {
     console.error("Failed to fetch programs:", error);
     return NextResponse.json({ error: "Failed to fetch programs" }, { status: 500 });
   }
 }
 
-// POST /api/programs - Create a new program
+// POST /api/v1/programs - Create a new program
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

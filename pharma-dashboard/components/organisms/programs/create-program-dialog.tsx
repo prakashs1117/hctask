@@ -36,7 +36,7 @@ export function CreateProgramDialog({ canCreate }: CreateProgramDialogProps) {
   const handleSubmit = useCallback(async (data: CreateProgramFormData) => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/programs", {
+      const response = await fetch("/api/v1/programs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

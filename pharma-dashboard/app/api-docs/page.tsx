@@ -6,7 +6,7 @@ import "swagger-ui-react/swagger-ui.css";
 export default function ApiDocsPage() {
   return (
     <div className="min-h-screen bg-white">
-      <SwaggerUI url="/api/api-docs" />
+      <SwaggerUI url="/api/v1/api-docs" />
     </div>
   );
 }

@@ -16,7 +16,7 @@ export const openApiSpec = {
     },
   ],
   paths: {
-    "/api/programs": {
+    "/api/v1/programs": {
       get: {
         tags: ["Programs"],
         summary: "List all programs",
@@ -55,8 +55,14 @@ export const openApiSpec = {
             content: {
               "application/json": {
                 schema: {
-                  type: "array",
-                  items: { $ref: "#/components/schemas/Program" },
+                  type: "object",
+                  properties: {
+                    data: {
+                      type: "array",
+                      items: { $ref: "#/components/schemas/Program" },
+                    },
+                    totalCount: { type: "integer", description: "Total number of programs before filtering" },
+                  },
                 },
               },
             },
@@ -94,7 +100,7 @@ export const openApiSpec = {
         },
       },
     },
-    "/api/programs/{id}": {
+    "/api/v1/programs/{id}": {
       get: {
         tags: ["Programs"],
         summary: "Get a program by ID",
@@ -202,7 +208,7 @@ export const openApiSpec = {
         },
       },
     },
-    "/api/users": {
+    "/api/v1/users": {
       get: {
         tags: ["Users"],
         summary: "List all users",
@@ -212,8 +218,14 @@ export const openApiSpec = {
             content: {
               "application/json": {
                 schema: {
-                  type: "array",
-                  items: { $ref: "#/components/schemas/User" },
+                  type: "object",
+                  properties: {
+                    data: {
+                      type: "array",
+                      items: { $ref: "#/components/schemas/User" },
+                    },
+                    totalCount: { type: "integer", description: "Total number of users" },
+                  },
                 },
               },
             },
@@ -251,7 +263,7 @@ export const openApiSpec = {
         },
       },
     },
-    "/api/users/{id}": {
+    "/api/v1/users/{id}": {
       get: {
         tags: ["Users"],
         summary: "Get a user by ID",
@@ -356,7 +368,7 @@ export const openApiSpec = {
         },
       },
     },
-    "/api/alerts": {
+    "/api/v1/alerts": {
       get: {
         tags: ["Alerts"],
         summary: "List alerts",
@@ -384,8 +396,14 @@ export const openApiSpec = {
             content: {
               "application/json": {
                 schema: {
-                  type: "array",
-                  items: { $ref: "#/components/schemas/Alert" },
+                  type: "object",
+                  properties: {
+                    data: {
+                      type: "array",
+                      items: { $ref: "#/components/schemas/Alert" },
+                    },
+                    totalCount: { type: "integer", description: "Total number of alerts before filtering" },
+                  },
                 },
               },
             },
@@ -423,7 +441,7 @@ export const openApiSpec = {
         },
       },
     },
-    "/api/alerts/{id}": {
+    "/api/v1/alerts/{id}": {
       get: {
         tags: ["Alerts"],
         summary: "Get an alert by ID",

@@ -20,7 +20,7 @@ const CreateUserSchema = z.object({
 export async function GET() {
   try {
     const users = await getAllUsers();
-    return NextResponse.json(users);
+    return NextResponse.json({ data: users, totalCount: users.length });
   } catch (error) {
     console.error('Failed to fetch users:', error);
     return NextResponse.json(

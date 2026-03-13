@@ -171,7 +171,7 @@ describe('EditProgramDialog', () => {
       await user.click(updateButton);
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith(`/api/programs/${mockProgram.id}`, {
+        expect(mockFetch).toHaveBeenCalledWith(`/api/v1/programs/${mockProgram.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
