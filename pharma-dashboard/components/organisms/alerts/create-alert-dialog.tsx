@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
+import { usePrograms } from "@/lib/hooks/usePrograms";
 import { Button } from "@/components/atoms/button";
 import {
   Dialog,
@@ -35,6 +36,9 @@ export function CreateAlertDialog({ canCreate }: CreateAlertDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
+
+  // Prefetch programs so the dropdown is instant when the dialog opens
+  usePrograms();
 
   const handleSubmit = async (data: CreateAlertFormData) => {
     setIsLoading(true);
