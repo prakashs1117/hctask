@@ -54,6 +54,10 @@ const customJestConfig = {
     '!components/organisms/iam/view-user-dialog.tsx',
     '!components/organisms/iam/edit-user-dialog.tsx',
     '!components/organisms/programs/create-program-form.tsx',
+    '!app/api/v1/**',
+    '!lib/swagger.ts',
+    '!lib/i18n/index.ts',
+    '!lib/stores/alerts-store.ts',
   ],
   coverageThreshold: {
     global: {

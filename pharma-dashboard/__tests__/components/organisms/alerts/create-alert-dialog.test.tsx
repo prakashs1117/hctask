@@ -6,6 +6,17 @@ jest.mock('sonner', () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }));
 
+jest.mock('@tanstack/react-query', () => ({
+  ...jest.requireActual('@tanstack/react-query'),
+  useQueryClient: jest.fn().mockReturnValue({
+    invalidateQueries: jest.fn(),
+  }),
+}));
+
+jest.mock('../../../../lib/hooks/usePrograms', () => ({
+  usePrograms: () => ({ data: [], isLoading: false }),
+}));
+
 jest.mock('../../../../components/organisms/alerts/create-alert-form', () => ({
   CreateAlertForm: () => <div data-testid="alert-form">Alert Form</div>,
 }));
