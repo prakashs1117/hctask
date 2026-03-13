@@ -28,6 +28,24 @@ jest.mock('../../../lib/hooks/useTranslation', () => ({
   }),
 }));
 
+jest.mock('../../../lib/stores/uiStore', () => ({
+  useUIStore: () => ({
+    sidebarCollapsed: false,
+    toggleSidebar: jest.fn(),
+  }),
+}));
+
+jest.mock('../../../lib/stores/authStore', () => ({
+  useAuthStore: () => ({
+    role: 'Manager',
+    setRole: jest.fn(),
+  }),
+}));
+
+jest.mock('../../../lib/hooks/useAlerts', () => ({
+  useActiveAlertCount: () => 3,
+}));
+
 describe('Sidebar', () => {
   it('should render app name', () => {
     render(<Sidebar />);
@@ -55,5 +73,10 @@ describe('Sidebar', () => {
     expect(hrefs).toContain('/programs');
     expect(hrefs).toContain('/iam');
     expect(hrefs).toContain('/alerts');
+  });
+
+  it('should show alert count badge', () => {
+    render(<Sidebar />);
+    expect(screen.getByText('3')).toBeInTheDocument();
   });
 });

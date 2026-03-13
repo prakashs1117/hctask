@@ -2,31 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import AlertsPage from '../../../app/alerts/page';
 
-const mockAlerts = [
-  {
-    id: 'ALT-001',
-    program: 'Program Alpha',
-    study: 'Study 1',
-    deadline: '2026-04-01',
-    channel: ['Email'] as const,
-    status: 'Active' as const,
-    recurring: 'One-time' as const,
-    notifyBefore: [7],
-    createdAt: '2024-01-01',
-  },
-  {
-    id: 'ALT-002',
-    program: 'Program Beta',
-    study: 'Study 2',
-    deadline: '2024-01-01',
-    channel: ['SMS'] as const,
-    status: 'Overdue' as const,
-    recurring: 'Weekly' as const,
-    notifyBefore: [3],
-    createdAt: '2024-01-01',
-  },
-];
-
 jest.mock('../../../lib/hooks/useTranslation', () => ({
   useTranslation: () => ({
     t: (key: string) => {
@@ -62,9 +37,8 @@ jest.mock('../../../lib/hooks/useTranslation', () => ({
   }),
 }));
 
-jest.mock('@tanstack/react-query', () => ({
-  ...jest.requireActual('@tanstack/react-query'),
-  useQuery: jest.fn().mockReturnValue({
+jest.mock('../../../lib/hooks/useAlerts', () => ({
+  useAlerts: () => ({
     data: [
       {
         id: 'ALT-001',
@@ -91,6 +65,22 @@ jest.mock('@tanstack/react-query', () => ({
     ],
     isLoading: false,
   }),
+  useActiveAlertCount: () => 2,
+}));
+
+jest.mock('@tanstack/react-query', () => ({
+  ...jest.requireActual('@tanstack/react-query'),
+  useQueryClient: jest.fn().mockReturnValue({
+    invalidateQueries: jest.fn(),
+  }),
+  useMutation: jest.fn().mockReturnValue({
+    mutate: jest.fn(),
+    isPending: false,
+  }),
+}));
+
+jest.mock('sonner', () => ({
+  toast: { success: jest.fn(), error: jest.fn() },
 }));
 
 jest.mock('../../../lib/stores/authStore', () => ({
