@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { alerts } from "../route";
+import { alerts } from "@/lib/data/alerts-store";
 
 // GET /api/alerts/:id - Get alert by ID
 export async function GET(
@@ -36,7 +36,6 @@ export async function PUT(
 
     const body = await request.json();
 
-    // Merge updates into the existing alert
     const updatedAlert = {
       ...alerts[index],
       ...body,

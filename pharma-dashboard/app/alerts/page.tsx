@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { getAlerts } from "@/lib/api/data";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useAlerts } from "@/lib/hooks/useAlerts";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/organisms/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/card";
@@ -29,10 +29,7 @@ import { useTranslation } from "@/lib/hooks/useTranslation";
  */
 export default function AlertsPage() {
   const { t } = useTranslation();
-  const { data: alerts, isLoading } = useQuery({
-    queryKey: ["alerts"],
-    queryFn: getAlerts,
-  });
+  const { data: alerts, isLoading } = useAlerts();
 
   const queryClient = useQueryClient();
   const { hasPermission } = useAuthStore();

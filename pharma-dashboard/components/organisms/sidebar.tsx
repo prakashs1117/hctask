@@ -15,6 +15,7 @@ import {
   SelectItem,
 } from "@/components/atoms/select";
 import { useTranslation } from "@/lib/hooks/useTranslation";
+import { useActiveAlertCount } from "@/lib/hooks/useAlerts";
 
 /**
  * Navigation item configuration
@@ -23,7 +24,7 @@ interface NavItem {
   titleKey: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  badge?: number;
+  badgeKey?: string;
 }
 
 const navItems: NavItem[] = [
@@ -46,7 +47,7 @@ const navItems: NavItem[] = [
     titleKey: "navigation.alerts",
     href: "/alerts",
     icon: Bell,
-    badge: 3,
+    badgeKey: "alerts",
   },
 ];
 
@@ -58,6 +59,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const { sidebarCollapsed, toggleSidebar } = useUIStore();
   const { role, setRole } = useAuthStore();
+  const activeAlertCount = useActiveAlertCount();
 
   return (
     <div
@@ -112,9 +114,9 @@ export function Sidebar() {
               {!sidebarCollapsed && (
                 <>
                   <span className="flex-1">{title}</span>
-                  {item.badge && (
+                  {item.badgeKey === "alerts" && activeAlertCount > 0 && (
                     <span className="rounded-full bg-destructive px-2 py-0.5 text-xs text-destructive-foreground">
-                      {item.badge}
+                      {activeAlertCount}
                     </span>
                   )}
                 </>
