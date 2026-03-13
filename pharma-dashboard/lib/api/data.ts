@@ -16,7 +16,7 @@ import milestonesData from "@/data/mock/milestones.json";
  */
 export async function getPrograms(): Promise<Program[]> {
   try {
-    const response = await fetch('/api/programs', {
+    const response = await fetch('/api/v1/programs', {
       cache: 'no-store', // Ensure fresh data
     });
 
@@ -24,7 +24,7 @@ export async function getPrograms(): Promise<Program[]> {
       throw new Error('Failed to fetch programs');
     }
 
-    const programs = await response.json();
+    const { data: programs } = await response.json();
 
     // Convert date strings to Date objects
     return programs.map((program: Record<string, unknown>) => ({
@@ -74,7 +74,7 @@ export async function getPrograms(): Promise<Program[]> {
  */
 export async function getProgramById(id: string): Promise<Program | null> {
   try {
-    const response = await fetch(`/api/programs/${id}`, {
+    const response = await fetch(`/api/v1/programs/${id}`, {
       cache: 'no-store',
     });
 
@@ -164,7 +164,7 @@ export async function getUserById(id: string): Promise<User | null> {
  */
 export async function getAlerts(): Promise<Alert[]> {
   try {
-    const response = await fetch('/api/alerts', {
+    const response = await fetch('/api/v1/alerts', {
       cache: 'no-store', // Ensure fresh data
     });
 
@@ -172,7 +172,7 @@ export async function getAlerts(): Promise<Alert[]> {
       throw new Error('Failed to fetch alerts');
     }
 
-    const alerts = await response.json();
+    const { data: alerts } = await response.json();
 
     // Convert date strings to Date objects
     return alerts.map((alert: Record<string, unknown>) => ({
@@ -196,7 +196,7 @@ export async function getAlerts(): Promise<Alert[]> {
  */
 export async function getAlertById(id: string): Promise<Alert | null> {
   try {
-    const response = await fetch(`/api/alerts/${id}`, {
+    const response = await fetch(`/api/v1/alerts/${id}`, {
       cache: 'no-store',
     });
 

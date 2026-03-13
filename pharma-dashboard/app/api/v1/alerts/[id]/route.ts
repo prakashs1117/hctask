@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { alerts } from "@/lib/data/alerts-store";
 
-// GET /api/alerts/:id - Get alert by ID
+// GET /api/v1/alerts/:id - Get alert by ID
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -21,7 +21,7 @@ export async function GET(
   }
 }
 
-// PUT /api/alerts/:id - Update an alert
+// PUT /api/v1/alerts/:id - Update an alert
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -52,7 +52,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/alerts/:id - Delete an alert
+// DELETE /api/v1/alerts/:id - Delete an alert
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

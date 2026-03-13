@@ -40,7 +40,7 @@ export function EditProgramDialog({ program, canEdit, variant = "default" }: Edi
   const handleSubmit = async (data: EditProgramFormData) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/programs/${program.id}`, {
+      const response = await fetch(`/api/v1/programs/${program.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -11,7 +11,7 @@ interface RouteParams {
   }>;
 }
 
-// GET /api/programs/[id] - Get a specific program by ID
+// GET /api/v1/programs/[id] - Get a specific program by ID
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// PUT /api/programs/[id] - Update a specific program
+// PUT /api/v1/programs/[id] - Update a specific program
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
@@ -64,7 +64,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// DELETE /api/programs/[id] - Delete a specific program
+// DELETE /api/v1/programs/[id] - Delete a specific program
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;

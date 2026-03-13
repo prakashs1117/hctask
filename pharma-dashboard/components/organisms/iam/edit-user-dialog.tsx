@@ -35,7 +35,7 @@ export function EditUserDialog({
 
   const updateUserMutation = useMutation({
     mutationFn: async (data: UpdateUserData) => {
-      const response = await fetch(`/api/users/${user.id}`, {
+      const response = await fetch(`/api/v1/users/${user.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { type Alert, type NotificationChannel } from "@/types";
 import { alerts, getNextAlertId } from "@/lib/data/alerts-store";
 
-// GET /api/alerts - Get all alerts
+// GET /api/v1/alerts - Get all alerts
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -19,14 +19,14 @@ export async function GET(request: NextRequest) {
       filteredAlerts = filteredAlerts.filter((alert) => alert.status === status);
     }
 
-    return NextResponse.json(filteredAlerts);
+    return NextResponse.json({ data: filteredAlerts, totalCount: alerts.length });
   } catch (error) {
     console.error("Failed to fetch alerts:", error);
     return NextResponse.json({ error: "Failed to fetch alerts" }, { status: 500 });
   }
 }
 
-// POST /api/alerts - Create a new alert
+// POST /api/v1/alerts - Create a new alert
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

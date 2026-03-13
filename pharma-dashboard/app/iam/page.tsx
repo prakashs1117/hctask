@@ -18,9 +18,10 @@ export default function IAMPage() {
   const { data: users, isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const response = await fetch("/api/users");
+      const response = await fetch("/api/v1/users");
       if (!response.ok) throw new Error("Failed to fetch users");
-      return response.json();
+      const json = await response.json();
+      return json.data;
     },
   });
 
