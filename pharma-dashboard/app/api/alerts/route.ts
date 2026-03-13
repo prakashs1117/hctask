@@ -3,7 +3,7 @@ import { type Alert, type NotificationChannel } from "@/types";
 
 // In-memory storage for demo purposes
 // In a real application, you would use a database
-const alerts: Alert[] = [
+export const alerts: Alert[] = [
   {
     id: "A001",
     programId: "PROG001",
@@ -40,6 +40,8 @@ const alerts: Alert[] = [
     notifyBefore: [14, 7, 3]
   }
 ];
+
+let nextId = 4;
 
 // GET /api/alerts - Get all alerts
 export async function GET(request: NextRequest) {
@@ -82,7 +84,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate new alert ID
-    const newId = `A${String(alerts.length + 1).padStart(3, "0")}`;
+    const newId = `A${String(nextId++).padStart(3, "0")}`;
 
     // Create new alert
     const newAlert: Alert = {

@@ -1,7 +1,8 @@
 "use client";
 
-import { Moon, Sun, Globe } from "lucide-react";
+import { Moon, Sun, Globe, FileText } from "lucide-react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import { Button } from "@/components/atoms/button";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 
@@ -22,6 +23,14 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-1 sm:gap-2">
+        {/* API Docs Link */}
+        <Button variant="ghost" size="sm" asChild className="h-8 px-2 sm:h-9 sm:px-3">
+          <Link href="/api-docs">
+            <FileText className="h-4 w-4 sm:mr-1" />
+            <span className="hidden sm:inline text-xs">API Docs</span>
+          </Link>
+        </Button>
+
         {/* Locale Switcher */}
         <Button
           variant="ghost"

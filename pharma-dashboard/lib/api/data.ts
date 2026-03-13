@@ -190,6 +190,30 @@ export async function getAlerts(): Promise<Alert[]> {
 }
 
 /**
+ * Fetch alert by ID
+ * @param id - Alert ID
+ * @returns Alert or null
+ */
+export async function getAlertById(id: string): Promise<Alert | null> {
+  try {
+    const response = await fetch(`/api/alerts/${id}`, {
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) return null;
+      throw new Error('Failed to fetch alert');
+    }
+
+    const alert = await response.json();
+    return { ...alert, deadline: new Date(alert.deadline) };
+  } catch (error) {
+    console.error('Failed to fetch alert:', error);
+    return null;
+  }
+}
+
+/**
  * Fetch alerts by program ID
  * @param programId - Program ID
  * @returns Array of alerts

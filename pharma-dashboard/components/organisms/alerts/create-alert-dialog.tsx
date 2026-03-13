@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import {
@@ -33,6 +34,7 @@ interface CreateAlertDialogProps {
 export function CreateAlertDialog({ canCreate }: CreateAlertDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (data: CreateAlertFormData) => {
     setIsLoading(true);
@@ -49,20 +51,16 @@ export function CreateAlertDialog({ canCreate }: CreateAlertDialogProps) {
         throw new Error("Failed to create alert");
       }
 
-      const newAlert = await response.json();
-      console.log("Alert created:", newAlert);
-
       // Close dialog and show success message
       setIsOpen(false);
-
       toast.success("Alert created successfully!");
 
-      // Refresh the page to show the new alert
-      window.location.reload();
+      // Invalidate alerts query to refetch fresh data
+      queryClient.invalidateQueries({ queryKey: ["alerts"] });
     } catch (error) {
       console.error("Failed to create alert:", error);
       toast.error("Failed to create alert. Please try again.");
-      throw error; // Re-throw so form can handle it
+      throw error;
     } finally {
       setIsLoading(false);
     }

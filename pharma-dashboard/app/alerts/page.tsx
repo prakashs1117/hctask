@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useCallback } from "react";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getAlerts } from "@/lib/api/data";
+import { toast } from "sonner";
 import { PageHeader } from "@/components/organisms/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/card";
 import { Button } from "@/components/atoms/button";
@@ -33,8 +34,69 @@ export default function AlertsPage() {
     queryFn: getAlerts,
   });
 
+  const queryClient = useQueryClient();
   const { hasPermission } = useAuthStore();
   const canSetAlerts = hasPermission("set_alerts");
+
+  // Dismiss alert mutation
+  const dismissMutation = useMutation({
+    mutationFn: async (alertId: string) => {
+      const response = await fetch(`/api/alerts/${alertId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Dismissed" }),
+      });
+      if (!response.ok) throw new Error("Failed to dismiss alert");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["alerts"] });
+      toast.success("Alert dismissed");
+    },
+    onError: () => {
+      toast.error("Failed to dismiss alert");
+    },
+  });
+
+  // Snooze alert mutation (pushes deadline by 7 days)
+  const snoozeMutation = useMutation({
+    mutationFn: async (alert: { id: string; deadline: Date }) => {
+      const newDeadline = new Date(alert.deadline);
+      newDeadline.setDate(newDeadline.getDate() + 7);
+      const response = await fetch(`/api/alerts/${alert.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deadline: newDeadline.toISOString(), status: "Active" }),
+      });
+      if (!response.ok) throw new Error("Failed to snooze alert");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["alerts"] });
+      toast.success("Alert snoozed by 7 days");
+    },
+    onError: () => {
+      toast.error("Failed to snooze alert");
+    },
+  });
+
+  // Delete alert mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (alertId: string) => {
+      const response = await fetch(`/api/alerts/${alertId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete alert");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["alerts"] });
+      toast.success("Alert deleted");
+    },
+    onError: () => {
+      toast.error("Failed to delete alert");
+    },
+  });
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
@@ -203,11 +265,34 @@ export default function AlertsPage() {
                         {canSetAlerts && (
                           <td className="px-4 py-3 text-right">
                             <div className="flex justify-end gap-2">
-                              <Button variant="ghost" size="sm">
-                                {t("common.snooze")}
-                              </Button>
-                              <Button variant="outline" size="sm">
-                                {t("common.dismiss")}
+                              {alert.status !== "Dismissed" && (
+                                <>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    disabled={snoozeMutation.isPending}
+                                    onClick={() => snoozeMutation.mutate({ id: alert.id, deadline: alert.deadline })}
+                                  >
+                                    {t("common.snooze")}
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={dismissMutation.isPending}
+                                    onClick={() => dismissMutation.mutate(alert.id)}
+                                  >
+                                    {t("common.dismiss")}
+                                  </Button>
+                                </>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-destructive hover:text-destructive"
+                                disabled={deleteMutation.isPending}
+                                onClick={() => deleteMutation.mutate(alert.id)}
+                              >
+                                {t("common.delete")}
                               </Button>
                             </div>
                           </td>
