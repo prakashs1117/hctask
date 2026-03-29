@@ -4,14 +4,17 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { I18nProvider } from "@/components/providers/i18n-provider";
+import { AuthGuard } from "@/components/providers/auth-guard";
 import { Sidebar } from "@/components/organisms/sidebar";
 import { Header } from "@/components/organisms/header";
 import { Toaster } from "sonner";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600"], // Only light to semibold weights
+  style: ["normal"],
+  display: "swap",
+  preload: true,
   variable: "--font-poppins"
 });
 
@@ -40,15 +43,9 @@ export default function RootLayout({
         >
           <QueryProvider>
             <I18nProvider>
-              <div className="flex h-screen overflow-hidden">
-                <Sidebar />
-                <div className="flex flex-1 flex-col overflow-hidden">
-                  <Header />
-                  <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6">
-                    {children}
-                  </main>
-                </div>
-              </div>
+              <AuthGuard>
+                {children}
+              </AuthGuard>
             </I18nProvider>
           </QueryProvider>
           <Toaster />

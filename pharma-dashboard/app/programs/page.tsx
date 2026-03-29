@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { usePrograms } from "@/lib/hooks/usePrograms";
 import { useFilterStore } from "@/lib/stores/filterStore";
 import { useFilteredPrograms } from "@/lib/hooks/useFilteredPrograms";
+import { useRoleBasedPrograms, useProgramPermissions } from "@/lib/hooks/useRoleBasedPrograms";
 import { Card, CardContent } from "@/components/atoms/card";
 import { Button } from "@/components/atoms/button";
 import { Badge } from "@/components/atoms/badge";
 import { LoadingSpinner } from "@/components/atoms/loading-spinner";
 import { EmptyState } from "@/components/molecules/empty-state";
+import { RoleEmptyState } from "@/components/molecules/role-empty-state";
+import { RoleActionButton, RoleIndicator } from "@/components/molecules/role-action-button";
 import { FilterSidebar } from "@/components/organisms/filter-sidebar";
 import { PageHeader } from "@/components/organisms/page-header";
 import { ProgramFilterBar } from "@/components/organisms/programs/program-filter-bar";
@@ -18,18 +21,21 @@ import { CreateProgramDialog } from "@/components/organisms/programs/create-prog
 import { EditProgramDialog } from "@/components/organisms/programs/edit-program-dialog";
 import { ProgramFilters } from "@/components/organisms/programs/program-filters";
 import { calculateProgramTotals, truncateText } from "@/lib/utils/formatters";
-import { Beaker, FileText, BarChart3, Users, Eye } from "lucide-react";
+import { Beaker, FileText, BarChart3, Users, Eye, Plus } from "lucide-react";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 
 export default function ProgramsPage() {
   const { t } = useTranslation();
-  const { data: programs, isLoading } = usePrograms();
+  const { data: allPrograms, isLoading } = usePrograms();
   const filters = useFilterStore();
-  const filteredPrograms = useFilteredPrograms(programs, filters);
   const { hasPermission } = useAuthStore();
   const [filterSidebarOpen, setFilterSidebarOpen] = useState(false);
+
+  // Apply role-based filtering first, then regular filters
+  const roleBasedPrograms = useRoleBasedPrograms(allPrograms, undefined);
+  const filteredPrograms = useFilteredPrograms(roleBasedPrograms, filters);
 
   const canCreatePrograms = hasPermission("create_programs");
 
@@ -44,20 +50,47 @@ export default function ProgramsPage() {
     filters.therapeuticArea !== "All" ? filters.therapeuticArea : null,
   ].filter(Boolean).length, [filters.search, filters.phase, filters.therapeuticArea]);
 
+  const handleFilterSidebarToggle = useCallback((open: boolean) => {
+    setFilterSidebarOpen(open);
+  }, []);
+
+  const handleClearFilters = useCallback(() => {
+    filters.resetFilters();
+  }, [filters]);
+
+  const handleCloseFilterSidebar = useCallback(() => {
+    setFilterSidebarOpen(false);
+  }, []);
+
   return (
     <div className="space-y-4">
-      <PageHeader
-        title={t("programs.title")}
-        description={t("programs.subtitle")}
-        icon={Beaker}
-        action={<CreateProgramDialog canCreate={canCreatePrograms} />}
-      />
+      <div className="flex items-center justify-between">
+        <PageHeader
+          title={t("programs.title")}
+          description={
+            <>
+              <div>{t("programs.subtitle")}</div>
+              <RoleIndicator showPermissions className="mt-2" />
+            </>
+          }
+          icon={Beaker}
+          action={
+            <RoleActionButton
+              requiredPermissions={["create_programs"]}
+              tooltipText="Create a new drug development program"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Create Program
+            </RoleActionButton>
+          }
+        />
+      </div>
 
       <ProgramFilterBar
         filteredCount={filteredPrograms.length}
-        totalCount={programs?.length || 0}
+        totalCount={roleBasedPrograms?.length || 0}
         filterSidebarOpen={filterSidebarOpen}
-        setFilterSidebarOpen={setFilterSidebarOpen}
+        setFilterSidebarOpen={handleFilterSidebarToggle}
         hasActiveFilters={hasActiveFilters}
         activeFilterCount={activeFilterCount}
       />
@@ -178,13 +211,21 @@ export default function ProgramsPage() {
                                 <span className="hidden sm:inline text-xs">{t("common.view")}</span>
                               </Button>
                             </Link>
-                            {hasPermission("edit_programs") && (
-                              <EditProgramDialog
-                                program={program}
-                                canEdit={hasPermission("edit_programs")}
-                                variant="table"
-                              />
-                            )}
+                            <RoleActionButton
+                              requiredPermissions={["edit_programs"]}
+                              variant="ghost"
+                              size="sm"
+                              className="gap-1 h-7 px-2"
+                              showRoleIndicator={false}
+                              tooltipText="Edit this program"
+                              fallbackText="Edit"
+                              onClick={() => {
+                                // This would open the edit dialog
+                                console.log("Edit program", program.id);
+                              }}
+                            >
+                              <span className="hidden sm:inline text-xs">Edit</span>
+                            </RoleActionButton>
                           </div>
                         </td>
                       </tr>
@@ -194,10 +235,9 @@ export default function ProgramsPage() {
               </table>
 
               {filteredPrograms.length === 0 && (
-                <EmptyState
-                  title={t("programs.noProgramsFound")}
-                  message={t("programs.noProgramsFoundDesc")}
-                  onClear={hasActiveFilters ? () => filters.resetFilters() : undefined}
+                <RoleEmptyState
+                  type="programs"
+                  onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
                 />
               )}
             </div>
@@ -207,10 +247,10 @@ export default function ProgramsPage() {
 
       <FilterSidebar
         isOpen={filterSidebarOpen}
-        onClose={() => setFilterSidebarOpen(false)}
+        onClose={handleCloseFilterSidebar}
         title={t("programs.programFilters")}
         activeFilterCount={activeFilterCount}
-        onClearAll={hasActiveFilters ? () => filters.resetFilters() : undefined}
+        onClearAll={hasActiveFilters ? handleClearFilters : undefined}
       >
         <ProgramFilters />
       </FilterSidebar>

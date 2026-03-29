@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import { Card } from '@/components/atoms/card';
 import { LucideIcon } from 'lucide-react';
 import { METRIC_THEMES, type MetricTheme } from '@/lib/constants/ui';
@@ -11,14 +12,14 @@ interface MetricCardProps {
   className?: string;
 }
 
-export function MetricCard({
+export const MetricCard = React.memo(({
   icon: Icon,
   label,
   value,
   theme,
   className
-}: MetricCardProps) {
-  const themeStyles = METRIC_THEMES[theme];
+}: MetricCardProps) => {
+  const themeStyles = useMemo(() => METRIC_THEMES[theme], [theme]);
 
   return (
     <Card className={cn('p-3', className)}>
@@ -37,4 +38,6 @@ export function MetricCard({
       </div>
     </Card>
   );
-}
+});
+
+MetricCard.displayName = "MetricCard";

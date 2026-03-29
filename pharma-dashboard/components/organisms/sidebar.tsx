@@ -25,6 +25,8 @@ interface NavItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badgeKey?: string;
+  requiredPermissions?: string[];
+  roles?: string[];
 }
 
 const navItems: NavItem[] = [
@@ -37,17 +39,21 @@ const navItems: NavItem[] = [
     titleKey: "navigation.programs",
     href: "/programs",
     icon: BarChart3,
+    requiredPermissions: ["view_programs"],
   },
   {
     titleKey: "navigation.iam",
     href: "/iam",
     icon: Users,
+    requiredPermissions: ["manage_users"],
+    roles: ["Manager"],
   },
   {
     titleKey: "navigation.alerts",
     href: "/alerts",
     icon: Bell,
     badgeKey: "alerts",
+    requiredPermissions: ["view_alerts"],
   },
 ];
 
@@ -58,8 +64,24 @@ export function Sidebar() {
   const { t } = useTranslation();
   const pathname = usePathname();
   const { sidebarCollapsed, toggleSidebar } = useUIStore();
-  const { role, setRole } = useAuthStore();
+  const { role, setRole, hasPermission } = useAuthStore();
   const activeAlertCount = useActiveAlertCount();
+
+  // Filter navigation items based on user permissions and role
+  const visibleNavItems = navItems.filter((item) => {
+    // Always show dashboard
+    if (item.href === "/") return true;
+
+    // Check role-based access
+    if (item.roles && !item.roles.includes(role)) return false;
+
+    // Check permission-based access
+    if (item.requiredPermissions) {
+      return item.requiredPermissions.some(permission => hasPermission(permission));
+    }
+
+    return true;
+  });
 
   return (
     <div
@@ -93,7 +115,7 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 p-2">
-        {navItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
           const title = t(item.titleKey);

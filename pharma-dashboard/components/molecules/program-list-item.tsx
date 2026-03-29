@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import { EnrollmentBar } from "@/components/molecules/enrollment-bar";
 import { PhaseBadge, TherapeuticAreaBadge } from "@/components/molecules/program-badge";
 import { calculateProgramTotals } from "@/lib/utils/formatters";
@@ -9,8 +10,16 @@ interface ProgramListItemProps {
   program: Program;
 }
 
-export function ProgramListItem({ program }: ProgramListItemProps) {
-  const { totalEnrollment, totalTarget, enrollmentPercentage } = calculateProgramTotals(program.studies);
+export const ProgramListItem = React.memo(({ program }: ProgramListItemProps) => {
+  const { totalEnrollment, totalTarget, enrollmentPercentage } = useMemo(
+    () => calculateProgramTotals(program.studies),
+    [program.studies]
+  );
+
+  const formattedUpdateDate = useMemo(
+    () => new Date(program.updatedAt).toLocaleDateString(),
+    [program.updatedAt]
+  );
 
   return (
     <Link href={`/programs/${program.id}`}>
@@ -43,7 +52,7 @@ export function ProgramListItem({ program }: ProgramListItemProps) {
             </div>
             <div className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              Updated {new Date(program.updatedAt).toLocaleDateString()}
+              Updated {formattedUpdateDate}
             </div>
           </div>
         </div>
@@ -57,4 +66,6 @@ export function ProgramListItem({ program }: ProgramListItemProps) {
       </div>
     </Link>
   );
-}
+});
+
+ProgramListItem.displayName = "ProgramListItem";
