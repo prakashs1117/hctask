@@ -106,6 +106,9 @@ function toProgram(p: PrismaProgramWithRelations): Program {
     phase: phaseMap[p.phase] || (p.phase as unknown as Phase),
     status: statusMap[p.status] || (p.status as unknown as ProgramStatus),
     manager: p.manager,
+    budget: (p as any).budget || 0, // Default value until migration runs
+    progress: (p as any).progress || 0, // Default value until migration runs
+    riskLevel: ((p as any).riskLevel as "Low" | "Medium" | "High") || "Medium", // Default value until migration runs
     createdAt: p.createdAt,
     updatedAt: p.updatedAt,
     studies: p.studies.map(toStudy),
@@ -151,6 +154,8 @@ export async function createProgram(
       phase: phaseReverseMap[programData.phase] as PrismaPhase,
       status: statusReverseMap[programData.status] as PrismaProgramStatus,
       manager: programData.manager,
+      // Note: budget, progress, riskLevel fields will be added via migration
+      // For now, we'll handle them in the mapping function
     },
     include: includeRelations,
   });
@@ -173,6 +178,11 @@ export async function updateProgram(
     if (updates.phase !== undefined) data.phase = phaseReverseMap[updates.phase];
     if (updates.status !== undefined) data.status = statusReverseMap[updates.status];
     if (updates.manager !== undefined) data.manager = updates.manager;
+    // Note: budget, progress, riskLevel will be available after running migration
+    // Temporarily skip these fields to prevent database errors
+    // if (updates.budget !== undefined) data.budget = updates.budget;
+    // if (updates.progress !== undefined) data.progress = updates.progress;
+    // if (updates.riskLevel !== undefined) data.riskLevel = updates.riskLevel;
 
     const program = await prisma.program.update({
       where: { id },

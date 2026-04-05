@@ -20,7 +20,7 @@ type CreateProgramFormData = {
   description?: string;
   therapeuticArea: "Oncology" | "Neurology" | "Cardiology" | "Immunology" | "Dermatology" | "Endocrinology";
   phase: "Preclinical" | "Phase I" | "Phase II" | "Phase III" | "Phase IV" | "Approved";
-  status: "Active" | "On Hold" | "Completed" | "Discontinued";
+  status: "Active" | "On Hold" | "Completed" | "Discontinued" | "Terminated" | "Pending Approval";
   manager: string;
 };
 

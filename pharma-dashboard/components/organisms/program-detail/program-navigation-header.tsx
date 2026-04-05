@@ -3,17 +3,20 @@ import { Button } from '@/components/atoms/button';
 import { Badge } from '@/components/atoms/badge';
 import { ArrowLeft, Building } from 'lucide-react';
 import { EditProgramDialog } from '@/components/organisms/programs/edit-program-dialog';
+import { DeleteProgramDialog } from '@/components/organisms/programs/delete-program-dialog';
 import { useTranslation, TRANSLATION_KEYS } from '@/lib/i18n';
 import type { Program } from '@/types';
 
 interface ProgramNavigationHeaderProps {
   program: Program;
   canEdit: boolean;
+  canDelete?: boolean;
 }
 
 export function ProgramNavigationHeader({
   program,
-  canEdit
+  canEdit,
+  canDelete = false
 }: ProgramNavigationHeaderProps) {
   const { t } = useTranslation();
   return (
@@ -31,12 +34,21 @@ export function ProgramNavigationHeader({
           {t(TRANSLATION_KEYS.PROGRAM.DETAILS)}
         </Badge>
       </div>
-      {canEdit && (
-        <EditProgramDialog
-          program={program}
-          canEdit={canEdit}
-        />
-      )}
+      <div className="flex gap-2">
+        {canEdit && (
+          <EditProgramDialog
+            program={program}
+            canEdit={canEdit}
+          />
+        )}
+        {canDelete && (
+          <DeleteProgramDialog
+            program={program}
+            canDelete={canDelete}
+            variant="detail"
+          />
+        )}
+      </div>
     </div>
   );
 }

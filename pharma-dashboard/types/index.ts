@@ -9,7 +9,7 @@ export type Phase = "Preclinical" | "Phase I" | "Phase II" | "Phase III" | "Phas
 export type TherapeuticArea = "Oncology" | "Neurology" | "Cardiology" | "Immunology" | "Dermatology" | "Endocrinology";
 
 /** Program status */
-export type ProgramStatus = "Active" | "On Hold" | "Completed" | "Discontinued";
+export type ProgramStatus = "Active" | "On Hold" | "Completed" | "Discontinued" | "Terminated" | "Pending Approval";
 
 /** Study milestone status */
 export type MilestoneStatus = "Initiation" | "Recruitment" | "Analysis" | "Complete";
@@ -31,6 +31,9 @@ export interface Program {
   phase: Phase;
   status: ProgramStatus;
   manager: string;
+  budget?: number;
+  progress?: number;
+  riskLevel: "Low" | "Medium" | "High";
   createdAt: Date;
   updatedAt: Date;
   studies: Study[];
@@ -87,11 +90,16 @@ export interface Alert {
   studyId?: string;
   program: string;
   study: string;
+  message: string;
   deadline: Date;
   channel: NotificationChannel[];
-  status: "Active" | "Overdue" | "Dismissed";
+  status: "Active" | "Overdue" | "Dismissed" | "Resolved";
+  priority: "High" | "Medium" | "Low";
+  type: "Milestone" | "Enrollment" | "Regulatory" | "Safety";
   recurring: "One-time" | "Weekly" | "Monthly";
   notifyBefore: number[];
+  createdAt: Date;
+  resolvedAt?: Date;
 }
 
 /** Notification delivery channel */

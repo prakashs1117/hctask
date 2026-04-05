@@ -200,20 +200,20 @@ export function RoleSpecificDashboard({ programs, stats }: RoleSpecificDashboard
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {quickActions.map((action, index) => (
               <Button
                 key={index}
                 variant={action.variant}
                 asChild
-                className="h-auto p-4 justify-start"
+                className="h-20 p-3 justify-start text-left hover:scale-[1.02] transition-transform duration-200"
               >
-                <Link href={action.href}>
-                  <div className="flex items-start gap-3">
-                    <action.icon className="h-5 w-5 mt-0.5 shrink-0" />
-                    <div className="text-left">
-                      <div className="font-semibold text-sm">{action.title}</div>
-                      <div className="text-xs text-muted-foreground mt-1">
+                <Link href={action.href} className="w-full h-full">
+                  <div className="flex items-center gap-3 w-full h-full">
+                    <action.icon className="h-5 w-5 shrink-0 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-sm truncate">{action.title}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-tight">
                         {action.description}
                       </div>
                     </div>
@@ -226,25 +226,25 @@ export function RoleSpecificDashboard({ programs, stats }: RoleSpecificDashboard
       </Card>
 
       {/* Role-specific Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {roleSpecificMetrics.map((metric, index) => (
-          <Card key={index}>
+          <Card key={index} className="hover:shadow-md transition-shadow duration-200">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium truncate mr-2">
                 {metric.title}
               </CardTitle>
-              <metric.icon className="h-4 w-4 text-muted-foreground" />
+              <metric.icon className="h-4 w-4 text-muted-foreground shrink-0" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{metric.value}</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold mb-1 truncate">{metric.value}</div>
+              <p className="text-xs text-muted-foreground line-clamp-1 mb-2">
                 {metric.description}
               </p>
               <div className="flex items-center pt-1">
-                <span className="text-xs text-green-600 font-medium">
+                <span className="text-xs text-green-600 font-medium shrink-0">
                   {metric.trend}
                 </span>
-                <span className="text-xs text-muted-foreground ml-1">
+                <span className="text-xs text-muted-foreground ml-1 truncate">
                   from last month
                 </span>
               </div>
@@ -255,18 +255,18 @@ export function RoleSpecificDashboard({ programs, stats }: RoleSpecificDashboard
 
       {/* Role-specific Insights */}
       {programInsights && programInsights.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {programInsights.map((insight, index) => (
-            <Card key={index}>
-              <CardHeader>
+            <Card key={index} className="hover:shadow-md transition-shadow duration-200">
+              <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <insight.icon className="h-5 w-5" />
-                  {insight.title}
+                  <insight.icon className="h-5 w-5 shrink-0" />
+                  <span className="truncate">{insight.title}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold mb-2">{insight.count}</div>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-2 min-h-[2.5rem]">
                   {insight.description}
                 </p>
                 <Button
@@ -275,7 +275,7 @@ export function RoleSpecificDashboard({ programs, stats }: RoleSpecificDashboard
                   asChild
                   className="w-full"
                 >
-                  <Link href={insight.href}>
+                  <Link href={insight.href} className="truncate">
                     {insight.action}
                   </Link>
                 </Button>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Edit } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useUpdateProgramMutation } from "@/lib/store/api/apiSlice";
 import { Button } from "@/components/atoms/button";
 import {
   Dialog,
@@ -22,7 +22,7 @@ type EditProgramFormData = {
   description?: string;
   therapeuticArea: "Oncology" | "Neurology" | "Cardiology" | "Immunology" | "Dermatology" | "Endocrinology";
   phase: "Preclinical" | "Phase I" | "Phase II" | "Phase III" | "Phase IV" | "Approved";
-  status: "Active" | "On Hold" | "Completed" | "Discontinued";
+  status: "Active" | "On Hold" | "Completed" | "Discontinued" | "Terminated" | "Pending Approval";
   manager: string;
 };
 
@@ -34,41 +34,22 @@ interface EditProgramDialogProps {
 
 export function EditProgramDialog({ program, canEdit, variant = "default" }: EditProgramDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const queryClient = useQueryClient();
+  const [updateProgram, { isLoading }] = useUpdateProgramMutation();
 
   const handleSubmit = async (data: EditProgramFormData) => {
-    setIsLoading(true);
     try {
-      const response = await fetch(`/api/v1/programs/${program.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update program");
-      }
-
-      const updatedProgram = await response.json();
-      console.log("Program updated:", updatedProgram);
-
-      // Invalidate and refetch program data
-      await queryClient.invalidateQueries({ queryKey: ["program", program.id] });
-      await queryClient.invalidateQueries({ queryKey: ["programs"] });
+      await updateProgram({
+        id: program.id,
+        data: data
+      }).unwrap();
 
       // Close dialog and show success message
       setIsOpen(false);
-
       toast.success("Program updated successfully!");
     } catch (error) {
       console.error("Failed to update program:", error);
       toast.error("Failed to update program. Please try again.");
       throw error; // Re-throw so form can handle it
-    } finally {
-      setIsLoading(false);
     }
   };
 

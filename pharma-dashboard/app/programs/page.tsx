@@ -19,6 +19,7 @@ import { EnrollmentBar } from "@/components/molecules/enrollment-bar";
 import { PhaseBadge, TherapeuticAreaBadge } from "@/components/molecules/program-badge";
 import { CreateProgramDialog } from "@/components/organisms/programs/create-program-dialog";
 import { EditProgramDialog } from "@/components/organisms/programs/edit-program-dialog";
+import { DeleteProgramDialog } from "@/components/organisms/programs/delete-program-dialog";
 import { ProgramFilters } from "@/components/organisms/programs/program-filters";
 import { calculateProgramTotals, truncateText } from "@/lib/utils/formatters";
 import { Beaker, FileText, BarChart3, Users, Eye, Plus } from "lucide-react";
@@ -75,13 +76,7 @@ export default function ProgramsPage() {
           }
           icon={Beaker}
           action={
-            <RoleActionButton
-              requiredPermissions={["create_programs"]}
-              tooltipText="Create a new drug development program"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Create Program
-            </RoleActionButton>
+            <CreateProgramDialog canCreate={canCreatePrograms} />
           }
         />
       </div>
@@ -211,21 +206,16 @@ export default function ProgramsPage() {
                                 <span className="hidden sm:inline text-xs">{t("common.view")}</span>
                               </Button>
                             </Link>
-                            <RoleActionButton
-                              requiredPermissions={["edit_programs"]}
-                              variant="ghost"
-                              size="sm"
-                              className="gap-1 h-7 px-2"
-                              showRoleIndicator={false}
-                              tooltipText="Edit this program"
-                              fallbackText="Edit"
-                              onClick={() => {
-                                // This would open the edit dialog
-                                console.log("Edit program", program.id);
-                              }}
-                            >
-                              <span className="hidden sm:inline text-xs">Edit</span>
-                            </RoleActionButton>
+                            <EditProgramDialog
+                              program={program}
+                              canEdit={hasPermission("edit_programs")}
+                              variant="table"
+                            />
+                            <DeleteProgramDialog
+                              program={program}
+                              canDelete={hasPermission("delete_programs")}
+                              variant="table"
+                            />
                           </div>
                         </td>
                       </tr>

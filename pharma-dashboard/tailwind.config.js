@@ -18,6 +18,14 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: ["var(--font-poppins)", "Poppins", "sans-serif"],
+        sans: ["var(--font-poppins)", "Poppins", "ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
+      },
+      fontSize: {
+        'xs': ['0.75rem', { lineHeight: '1rem', letterSpacing: '-0.01em' }],
+        'sm': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '-0.01em' }],
+        'base': ['1rem', { lineHeight: '1.5rem', letterSpacing: '-0.01em' }],
+        'lg': ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '-0.02em' }],
+        'xl': ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '-0.02em' }],
       },
       colors: {
         border: "hsl(var(--border))",

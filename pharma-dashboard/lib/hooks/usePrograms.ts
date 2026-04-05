@@ -1,28 +1,28 @@
-import { useQuery } from "@tanstack/react-query";
-import { getPrograms, getProgramById } from "@/lib/api/data";
+/**
+ * DEPRECATED: This hook is maintained for backward compatibility.
+ * Please use the new Redux-based hooks from @/lib/hooks/redux
+ */
+
+import { usePrograms as useReduxPrograms, useProgram as useReduxProgram } from './redux';
 
 /**
- * Hook to fetch all programs with React Query
- * @returns Query result with programs data
+ * @deprecated Use usePrograms from @/lib/hooks/redux instead
+ * Hook to fetch all programs with React Query (now uses Redux under the hood)
  */
 export function usePrograms() {
-  return useQuery({
-    queryKey: ["programs"],
-    queryFn: getPrograms,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('usePrograms from @/lib/hooks/usePrograms is deprecated. Use @/lib/hooks/redux instead.');
+  }
+  return useReduxPrograms();
 }
 
 /**
+ * @deprecated Use useProgram from @/lib/hooks/redux instead
  * Hook to fetch a single program by ID
- * @param id - Program ID
- * @returns Query result with program data
  */
 export function useProgram(id: string) {
-  return useQuery({
-    queryKey: ["program", id],
-    queryFn: () => getProgramById(id),
-    enabled: !!id,
-    staleTime: 5 * 60 * 1000,
-  });
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('useProgram from @/lib/hooks/usePrograms is deprecated. Use @/lib/hooks/redux instead.');
+  }
+  return useReduxProgram(id);
 }

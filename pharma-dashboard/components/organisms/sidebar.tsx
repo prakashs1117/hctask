@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, BarChart3, Bell, ChevronLeft } from "lucide-react";
+import { Home, Users, BarChart3, Bell, ChevronLeft, TestTube } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useUIStore } from "@/lib/stores/uiStore";
 import { useAuthStore } from "@/lib/stores/authStore";
@@ -16,6 +16,7 @@ import {
 } from "@/components/atoms/select";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import { useActiveAlertCount } from "@/lib/hooks/useAlerts";
+import type { Permission } from "@/lib/constants/permissions";
 
 /**
  * Navigation item configuration
@@ -25,7 +26,7 @@ interface NavItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badgeKey?: string;
-  requiredPermissions?: string[];
+  requiredPermissions?: Permission[];
   roles?: string[];
 }
 
@@ -40,6 +41,17 @@ const navItems: NavItem[] = [
     href: "/programs",
     icon: BarChart3,
     requiredPermissions: ["view_programs"],
+  },
+  {
+    titleKey: "CRUD Demo",
+    href: "/programs/demo",
+    icon: TestTube,
+    requiredPermissions: ["view_programs"],
+  },
+  {
+    titleKey: "Dashboard Test",
+    href: "/dashboard-test",
+    icon: TestTube,
   },
   {
     titleKey: "navigation.iam",

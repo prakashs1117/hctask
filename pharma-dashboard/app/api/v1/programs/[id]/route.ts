@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
 
-    return NextResponse.json(program);
+    return NextResponse.json({ data: program });
   } catch (error) {
     console.error("Failed to fetch program:", error);
     return NextResponse.json({ error: "Failed to fetch program" }, { status: 500 });
@@ -51,13 +51,16 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       phase: body.phase,
       status: body.status,
       manager: body.manager,
+      budget: body.budget,
+      progress: body.progress,
+      riskLevel: body.riskLevel,
     });
 
     if (!updatedProgram) {
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
 
-    return NextResponse.json(updatedProgram);
+    return NextResponse.json({ data: updatedProgram });
   } catch (error) {
     console.error("Failed to update program:", error);
     return NextResponse.json({ error: "Failed to update program" }, { status: 500 });
@@ -75,7 +78,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Program deleted successfully" });
+    return NextResponse.json({ data: null, message: "Program deleted successfully" });
   } catch (error) {
     console.error("Failed to delete program:", error);
     return NextResponse.json({ error: "Failed to delete program" }, { status: 500 });
