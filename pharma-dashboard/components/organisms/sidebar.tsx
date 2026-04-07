@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, BarChart3, Bell, ChevronLeft } from "lucide-react";
+import { Home, Users, BarChart3, Bell, ChevronLeft, TestTube, Settings } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useUIStore } from "@/lib/stores/uiStore";
 import { useAuthStore } from "@/lib/stores/authStore";
@@ -16,6 +16,8 @@ import {
 } from "@/components/atoms/select";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import { useActiveAlertCount } from "@/lib/hooks/useAlerts";
+import { useFeatureFlags } from "@/lib/contexts/feature-flags-context";
+import type { Permission } from "@/lib/constants/permissions";
 
 /**
  * Navigation item configuration
@@ -25,6 +27,9 @@ interface NavItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badgeKey?: string;
+  requiredPermissions?: Permission[];
+  roles?: string[];
+  featureFlag?: keyof typeof import('@/lib/utils/featureFlags').featureFlags;
 }
 
 const navItems: NavItem[] = [
@@ -32,22 +37,57 @@ const navItems: NavItem[] = [
     titleKey: "navigation.dashboard",
     href: "/",
     icon: Home,
+    featureFlag: "enableDashboard",
   },
   {
     titleKey: "navigation.programs",
     href: "/programs",
     icon: BarChart3,
+    requiredPermissions: ["view_programs"],
+    featureFlag: "enablePrograms",
+  },
+ /*  {
+    titleKey: "CRUD Demo",
+    href: "/programs/demo",
+    icon: TestTube,
+    requiredPermissions: ["view_programs"],
+    featureFlag: "enablePrograms",
+  },
+  {
+    titleKey: "Dashboard Test",
+    href: "/dashboard-test",
+    icon: TestTube,
+  },
+  {
+    titleKey: "Feature Flags",
+    href: "/feature-flags",
+    icon: Settings,
+  },
+  {
+    titleKey: "Feature Test",
+    href: "/feature-test",
+    icon: TestTube,
+  },
+  {
+    titleKey: "🧪 Live FF Test",
+    href: "/feature-flags-test",
+    icon: TestTube,
   },
   {
     titleKey: "navigation.iam",
     href: "/iam",
     icon: Users,
-  },
+    requiredPermissions: ["manage_users"],
+    roles: ["Manager"],
+    featureFlag: "enableIAM",
+  }, */
   {
     titleKey: "navigation.alerts",
     href: "/alerts",
     icon: Bell,
     badgeKey: "alerts",
+    requiredPermissions: ["view_alerts"],
+    featureFlag: "enableAlerts",
   },
 ];
 
@@ -58,8 +98,30 @@ export function Sidebar() {
   const { t } = useTranslation();
   const pathname = usePathname();
   const { sidebarCollapsed, toggleSidebar } = useUIStore();
-  const { role, setRole } = useAuthStore();
+  const { role, setRole, hasPermission } = useAuthStore();
   const activeAlertCount = useActiveAlertCount();
+  const { isFeatureEnabled } = useFeatureFlags();
+
+  // Filter navigation items based on feature flags, user permissions and role
+  const visibleNavItems = navItems.filter((item) => {
+    // Check feature flag first - if disabled, don't show the item
+    if (item.featureFlag && !isFeatureEnabled(item.featureFlag)) {
+      return false;
+    }
+
+    // Always show dashboard (if feature is enabled)
+    if (item.href === "/") return true;
+
+    // Check role-based access
+    if (item.roles && !item.roles.includes(role)) return false;
+
+    // Check permission-based access
+    if (item.requiredPermissions) {
+      return item.requiredPermissions.some(permission => hasPermission(permission));
+    }
+
+    return true;
+  });
 
   return (
     <div
@@ -93,7 +155,7 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 p-2">
-        {navItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
           const title = t(item.titleKey);

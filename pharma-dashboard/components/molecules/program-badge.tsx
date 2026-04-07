@@ -61,6 +61,8 @@ const STATUS_VARIANTS: Record<ProgramStatus, { className: string; label: string 
   "On Hold": { className: "bg-amber-500/10 text-amber-500 border-amber-500/20", label: "On Hold" },
   Completed: { className: "bg-blue-500/10 text-blue-500 border-blue-500/20", label: "Completed" },
   Discontinued: { className: "bg-red-500/10 text-red-500 border-red-500/20", label: "Discontinued" },
+  Terminated: { className: "bg-gray-500/10 text-gray-500 border-gray-500/20", label: "Terminated" },
+  "Pending Approval": { className: "bg-purple-500/10 text-purple-500 border-purple-500/20", label: "Pending Approval" },
 };
 
 /**

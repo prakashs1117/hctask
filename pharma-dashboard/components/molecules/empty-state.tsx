@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { LucideIcon, Search } from 'lucide-react';
 import { Button } from "@/components/atoms/button";
 import { cn } from '@/lib/utils';
@@ -5,11 +6,12 @@ import { cn } from '@/lib/utils';
 interface EmptyStateProps {
   icon?: LucideIcon;
   title?: string;
-  message: string;
+  message: string | ReactNode;
   onClear?: () => void;
   clearLabel?: string;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
+  action?: ReactNode;
 }
 
 const sizeClasses = {
@@ -40,7 +42,8 @@ export function EmptyState({
   onClear,
   clearLabel = "Clear all filters",
   className,
-  size = 'lg'
+  size = 'lg',
+  action
 }: EmptyStateProps) {
   const sizeStyle = sizeClasses[size];
 
@@ -53,9 +56,14 @@ export function EmptyState({
         <Icon className={cn('text-muted-foreground', sizeStyle.iconSize)} />
       </div>
       {title && <h3 className="text-lg font-medium mb-2">{title}</h3>}
-      <p className={cn('text-muted-foreground leading-snug', title ? 'mb-4' : '', sizeStyle.text)}>{message}</p>
+      <div className={cn('text-muted-foreground leading-snug', title ? 'mb-4' : '', sizeStyle.text)}>{message}</div>
+      {action && (
+        <div className="mt-4">
+          {action}
+        </div>
+      )}
       {onClear && (
-        <Button variant="outline" onClick={onClear}>
+        <Button variant="outline" onClick={onClear} className="mt-4">
           {clearLabel}
         </Button>
       )}

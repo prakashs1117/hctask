@@ -72,9 +72,12 @@ export async function POST(request: NextRequest) {
       phase: body.phase,
       status: body.status,
       manager: body.manager,
+      budget: body.budget || 0,
+      progress: body.progress || 0,
+      riskLevel: body.riskLevel || "Medium",
     });
 
-    return NextResponse.json(createdProgram, { status: 201 });
+    return NextResponse.json({ data: createdProgram }, { status: 201 });
   } catch (error) {
     console.error("Failed to create program:", error);
     return NextResponse.json({ error: "Failed to create program" }, { status: 500 });

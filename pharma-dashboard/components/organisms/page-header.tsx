@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils/cn";
  */
 interface PageHeaderProps {
   title: string;
-  description?: string;
+  description?: string | React.ReactNode;
   icon?: LucideIcon;
   action?: React.ReactNode;
   className?: string;
@@ -34,7 +34,11 @@ export function PageHeader({
         <div>
           <h1 className="text-lg sm:text-xl font-semibold tracking-tight">{title}</h1>
           {description && (
-            <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-snug">{description}</p>
+            typeof description === 'string' ? (
+              <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-snug">{description}</p>
+            ) : (
+              <div className="mt-1 text-xs sm:text-sm text-muted-foreground leading-snug">{description}</div>
+            )
           )}
         </div>
       </div>

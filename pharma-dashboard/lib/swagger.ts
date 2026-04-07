@@ -547,6 +547,208 @@ export const openApiSpec = {
         },
       },
     },
+    "/api/v1/feature-flags": {
+      get: {
+        tags: ["Feature Flags"],
+        summary: "Get current feature flags",
+        description: "Returns the current state of all feature flags. Supports user-specific and environment-specific configurations.",
+        parameters: [
+          {
+            name: "userId",
+            in: "query",
+            schema: { type: "string" },
+            description: "User ID for user-specific feature flags (optional)",
+            example: "admin"
+          },
+          {
+            name: "env",
+            in: "query",
+            schema: {
+              type: "string",
+              enum: ["development", "staging", "production", "maintenance"],
+              default: "production"
+            },
+            description: "Environment for environment-specific feature flags",
+            example: "development"
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Current feature flags configuration",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    data: { $ref: "#/components/schemas/FeatureFlags" },
+                    timestamp: { type: "string", format: "date-time", example: "2026-04-05T13:55:25.642Z" },
+                    environment: { type: "string", example: "production" },
+                    userId: { type: "string", nullable: true, example: "admin" },
+                  },
+                },
+              },
+            },
+          },
+          "500": {
+            description: "Server error",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Error" },
+              },
+            },
+          },
+        },
+      },
+      put: {
+        tags: ["Feature Flags"],
+        summary: "Update feature flags",
+        description: "Update specific feature flags. Requires admin authentication. Only provided flags are updated (partial update).",
+        security: [{ AdminKey: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/FeatureFlagsUpdate" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Feature flags updated successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    data: { $ref: "#/components/schemas/FeatureFlags" },
+                    message: { type: "string", example: "Feature flags updated successfully" },
+                    timestamp: { type: "string", format: "date-time" },
+                  },
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Invalid request data",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Error" },
+              },
+            },
+          },
+          "401": {
+            description: "Unauthorized - Invalid or missing admin key",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Error" },
+              },
+            },
+          },
+          "500": {
+            description: "Server error",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Error" },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/v1/feature-flags/reset": {
+      post: {
+        tags: ["Feature Flags"],
+        summary: "Reset feature flags to defaults",
+        description: "Resets all feature flags to their default values. Requires admin authentication. This action cannot be undone.",
+        security: [{ AdminKey: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["adminKey"],
+                properties: {
+                  adminKey: {
+                    type: "string",
+                    description: "Admin authentication key",
+                    example: "admin123"
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Feature flags reset to defaults",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    data: { $ref: "#/components/schemas/FeatureFlags" },
+                    message: { type: "string", example: "Feature flags reset to defaults" },
+                    timestamp: { type: "string", format: "date-time" },
+                  },
+                },
+              },
+            },
+          },
+          "401": {
+            description: "Unauthorized - Invalid or missing admin key",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Error" },
+              },
+            },
+          },
+          "500": {
+            description: "Server error",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Error" },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/v1/dashboard/stats": {
+      get: {
+        tags: ["Dashboard"],
+        summary: "Get dashboard statistics",
+        description: "Returns computed statistics for the dashboard including program counts, study metrics, and enrollment data.",
+        responses: {
+          "200": {
+            description: "Dashboard statistics",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    data: { $ref: "#/components/schemas/DashboardStats" },
+                    success: { type: "boolean", example: true },
+                    message: { type: "string", example: "Dashboard stats retrieved successfully" },
+                  },
+                },
+              },
+            },
+          },
+          "500": {
+            description: "Server error",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Error" },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   components: {
     schemas: {
@@ -763,6 +965,172 @@ export const openApiSpec = {
         properties: {
           error: { type: "string" },
         },
+      },
+      FeatureFlags: {
+        type: "object",
+        description: "Complete feature flags configuration object",
+        properties: {
+          enableIAM: {
+            type: "boolean",
+            description: "Enable Identity & Access Management module",
+            example: true
+          },
+          enablePrograms: {
+            type: "boolean",
+            description: "Enable Programs management module",
+            example: true
+          },
+          enableDashboard: {
+            type: "boolean",
+            description: "Enable main dashboard module",
+            example: true
+          },
+          enableAlerts: {
+            type: "boolean",
+            description: "Enable alerts and notifications system",
+            example: true
+          },
+          enableRBAC: {
+            type: "boolean",
+            description: "Enable role-based access control",
+            example: true
+          },
+          enableDarkMode: {
+            type: "boolean",
+            description: "Enable dark mode theme toggle",
+            example: true
+          },
+          enableI18n: {
+            type: "boolean",
+            description: "Enable internationalization support",
+            example: true
+          },
+          enableVirtualization: {
+            type: "boolean",
+            description: "Enable virtual scrolling for large lists",
+            example: true
+          },
+          enableAnalytics: {
+            type: "boolean",
+            description: "Enable analytics and tracking",
+            example: false
+          },
+          enableBetaFeatures: {
+            type: "boolean",
+            description: "Enable experimental beta features",
+            example: false
+          },
+          enableMaintenanceMode: {
+            type: "boolean",
+            description: "Enable maintenance mode (limited access)",
+            example: false
+          },
+          enableAdvancedAnalytics: {
+            type: "boolean",
+            description: "Enable advanced analytics and reporting",
+            example: false
+          },
+          enableExperimentalUI: {
+            type: "boolean",
+            description: "Enable experimental UI components",
+            example: false
+          },
+        },
+      },
+      FeatureFlagsUpdate: {
+        type: "object",
+        description: "Partial feature flags update request",
+        required: ["adminKey"],
+        properties: {
+          adminKey: {
+            type: "string",
+            description: "Admin authentication key",
+            example: "admin123"
+          },
+          flags: {
+            type: "object",
+            description: "Partial feature flags to update. Only provided flags will be updated.",
+            properties: {
+              enableIAM: { type: "boolean" },
+              enablePrograms: { type: "boolean" },
+              enableDashboard: { type: "boolean" },
+              enableAlerts: { type: "boolean" },
+              enableRBAC: { type: "boolean" },
+              enableDarkMode: { type: "boolean" },
+              enableI18n: { type: "boolean" },
+              enableVirtualization: { type: "boolean" },
+              enableAnalytics: { type: "boolean" },
+              enableBetaFeatures: { type: "boolean" },
+              enableMaintenanceMode: { type: "boolean" },
+              enableAdvancedAnalytics: { type: "boolean" },
+              enableExperimentalUI: { type: "boolean" },
+            },
+            example: {
+              "enableDarkMode": false,
+              "enableI18n": true
+            }
+          },
+        },
+      },
+      DashboardStats: {
+        type: "object",
+        description: "Computed dashboard statistics",
+        properties: {
+          totalPrograms: {
+            type: "integer",
+            description: "Total number of programs",
+            example: 9
+          },
+          activeStudies: {
+            type: "integer",
+            description: "Number of active studies across all programs",
+            example: 15
+          },
+          averageEnrollment: {
+            type: "number",
+            format: "float",
+            description: "Average enrollment percentage across all studies",
+            example: 62.4
+          },
+          completedMilestones: {
+            type: "integer",
+            description: "Number of completed milestones",
+            example: 23
+          },
+          upcomingMilestones: {
+            type: "integer",
+            description: "Number of upcoming milestones (due within 30 days)",
+            example: 8
+          },
+          criticalAlerts: {
+            type: "integer",
+            description: "Number of critical/high-priority alerts",
+            example: 2
+          },
+          pendingApprovals: {
+            type: "integer",
+            description: "Number of programs pending approval",
+            example: 1
+          },
+          budgetUtilization: {
+            type: "integer",
+            description: "Overall budget utilization percentage",
+            example: 73
+          },
+          avgTimeToCompletion: {
+            type: "integer",
+            description: "Average time to program completion in days",
+            example: 365
+          },
+        },
+      },
+    },
+    securitySchemes: {
+      AdminKey: {
+        type: "apiKey",
+        in: "body",
+        name: "adminKey",
+        description: "Admin authentication key required for feature flag modifications"
       },
     },
   },

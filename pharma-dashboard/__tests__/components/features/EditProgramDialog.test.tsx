@@ -1,12 +1,9 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
 import { EditProgramDialog } from '@/components/organisms/programs/edit-program-dialog';
-import { type Program } from '../../../types';
-
-// Mock fetch
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
+import { mockProgram } from '../../test-utils';
+import type { Program } from '@/types';
 
 // Mock sonner toast
 const mockToastSuccess = jest.fn();
@@ -26,24 +23,22 @@ jest.mock('@tanstack/react-query', () => ({
   }),
 }));
 
-const mockProgram: Program = {
-  id: "PROG001",
-  name: "Test Program",
-  description: "A test program",
-  therapeuticArea: "Oncology",
-  phase: "Phase II",
-  status: "Active",
-  manager: "Dr. Test Manager",
-  createdAt: new Date("2024-01-01"),
-  updatedAt: new Date("2024-01-01"),
-  studies: [],
-  milestones: []
-};
+// Get the mocked functions from test-utils
+const { useUpdateProgramMutation } = jest.requireMock('@/lib/store/api/apiSlice');
 
 describe('EditProgramDialog', () => {
+  let mockMutationFn: jest.Mock;
+
   beforeEach(() => {
     jest.clearAllMocks();
-    mockFetch.mockClear();
+
+    // Set up the mocked mutation function
+    mockMutationFn = jest.fn().mockReturnValue({
+      unwrap: jest.fn().mockResolvedValue({ data: { success: true } })
+    });
+
+    // Mock the hook to return our mutation function
+    useUpdateProgramMutation.mockReturnValue([mockMutationFn, { isLoading: false, error: null }]);
   });
 
   describe('Permission Handling', () => {
@@ -118,12 +113,13 @@ describe('EditProgramDialog', () => {
       const editButton = screen.getByRole('button', { name: /edit program/i });
       await user.click(editButton);
 
-      expect(screen.getByDisplayValue('Test Program')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('A test program')).toBeInTheDocument();
+      // Check input values using getByRole or more flexible queries
+      expect(screen.getByRole('textbox', { name: /program name/i })).toHaveValue('Test Program');
+      expect(screen.getByRole('textbox', { name: /description/i })).toHaveValue('A test program for testing');
       expect(screen.getByDisplayValue('Oncology')).toBeInTheDocument();
       expect(screen.getByDisplayValue('Phase II')).toBeInTheDocument();
       expect(screen.getByDisplayValue('Active')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('Dr. Test Manager')).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /manager/i })).toHaveValue('Test Manager');
     });
 
     it('should close dialog when cancel is clicked', async () => {
@@ -146,12 +142,7 @@ describe('EditProgramDialog', () => {
   });
 
   describe('API Integration', () => {
-    it('should make PUT request with correct data on form submission', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ ...mockProgram, name: 'Updated Program' })
-      });
-
+    it('should call update mutation with correct data on form submission', async () => {
       const user = userEvent.setup();
       render(
         <EditProgramDialog program={mockProgram} canEdit={true} />
@@ -162,7 +153,7 @@ describe('EditProgramDialog', () => {
       await user.click(editButton);
 
       // Update program name
-      const nameInput = screen.getByDisplayValue('Test Program');
+      const nameInput = screen.getByRole('textbox', { name: /program name/i });
       await user.clear(nameInput);
       await user.type(nameInput, 'Updated Program');
 
@@ -171,29 +162,21 @@ describe('EditProgramDialog', () => {
       await user.click(updateButton);
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith(`/api/v1/programs/${mockProgram.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        expect(mockMutationFn).toHaveBeenCalledWith({
+          id: mockProgram.id,
+          data: {
             name: 'Updated Program',
-            description: 'A test program',
+            description: 'A test program for testing',
             therapeuticArea: 'Oncology',
             phase: 'Phase II',
             status: 'Active',
-            manager: 'Dr. Test Manager',
-          })
+            manager: 'Test Manager',
+          }
         });
       });
     });
 
     it('should show success toast on successful update', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ ...mockProgram, name: 'Updated Program' })
-      });
-
       const user = userEvent.setup();
       render(
         <EditProgramDialog program={mockProgram} canEdit={true} />
@@ -213,10 +196,11 @@ describe('EditProgramDialog', () => {
     });
 
     it('should handle API errors gracefully', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500
+      // Set up error mock before rendering
+      const mockErrorMutation = jest.fn().mockReturnValue({
+        unwrap: jest.fn().mockRejectedValue(new Error('API Error'))
       });
+      useUpdateProgramMutation.mockReturnValue([mockErrorMutation, { isLoading: false, error: null }]);
 
       const user = userEvent.setup();
       render(
@@ -234,10 +218,17 @@ describe('EditProgramDialog', () => {
       await waitFor(() => {
         expect(screen.getByText('Failed to update program. Please try again.')).toBeInTheDocument();
       });
+
+      // Toast should also be called
+      expect(mockToastError).toHaveBeenCalledWith('Failed to update program. Please try again.');
     });
 
     it('should handle network errors', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Network error'));
+      // Set up error mock before rendering
+      const mockErrorMutation = jest.fn().mockReturnValue({
+        unwrap: jest.fn().mockRejectedValue(new Error('Network error'))
+      });
+      useUpdateProgramMutation.mockReturnValue([mockErrorMutation, { isLoading: false, error: null }]);
 
       const user = userEvent.setup();
       render(
@@ -255,16 +246,14 @@ describe('EditProgramDialog', () => {
       await waitFor(() => {
         expect(screen.getByText('Failed to update program. Please try again.')).toBeInTheDocument();
       });
+
+      // Toast should also be called
+      expect(mockToastError).toHaveBeenCalledWith('Failed to update program. Please try again.');
     });
   });
 
   describe('Loading States', () => {
     it('should close dialog after successful submission', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ ...mockProgram, name: 'Updated Program' })
-      });
-
       const user = userEvent.setup();
       render(
         <EditProgramDialog program={mockProgram} canEdit={true} />

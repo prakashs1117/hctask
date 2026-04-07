@@ -3,15 +3,20 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { ReduxProvider } from "@/components/providers/redux-provider";
 import { I18nProvider } from "@/components/providers/i18n-provider";
+import { AuthGuard } from "@/components/providers/auth-guard";
+import { FeatureFlagsProvider } from "@/lib/contexts/feature-flags-context";
 import { Sidebar } from "@/components/organisms/sidebar";
 import { Header } from "@/components/organisms/header";
 import { Toaster } from "sonner";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600"], // Only light to semibold weights
+  style: ["normal"],
+  display: "swap",
+  preload: true,
   variable: "--font-poppins"
 });
 
@@ -32,27 +37,25 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} ${poppins.className}`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <QueryProvider>
-            <I18nProvider>
-              <div className="flex h-screen overflow-hidden">
-                <Sidebar />
-                <div className="flex flex-1 flex-col overflow-hidden">
-                  <Header />
-                  <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6">
+        <FeatureFlagsProvider userId="current-user" environment="production">
+          <ReduxProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <QueryProvider>
+                <I18nProvider>
+                  <AuthGuard>
                     {children}
-                  </main>
-                </div>
-              </div>
-            </I18nProvider>
-          </QueryProvider>
-          <Toaster />
-        </ThemeProvider>
+                  </AuthGuard>
+                </I18nProvider>
+              </QueryProvider>
+              <Toaster />
+            </ThemeProvider>
+          </ReduxProvider>
+        </FeatureFlagsProvider>
       </body>
     </html>
   );

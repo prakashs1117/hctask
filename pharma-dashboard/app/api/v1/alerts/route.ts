@@ -45,11 +45,15 @@ export async function POST(request: NextRequest) {
       studyId: body.studyId || undefined,
       program: body.program,
       study: body.study,
+      message: body.message || "New alert created",
       deadline: new Date(body.deadline),
       channel: body.channel as NotificationChannel[],
       status: "Active",
+      priority: body.priority || "Medium",
+      type: body.type || "Milestone",
       recurring: body.recurring,
       notifyBefore: body.notifyBefore,
+      createdAt: new Date(),
     };
 
     alerts.push(newAlert);

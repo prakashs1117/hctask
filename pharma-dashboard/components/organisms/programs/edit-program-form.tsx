@@ -15,7 +15,7 @@ const editProgramSchema = z.object({
   description: z.string().optional(),
   therapeuticArea: z.enum(["Oncology", "Neurology", "Cardiology", "Immunology", "Dermatology", "Endocrinology"]),
   phase: z.enum(["Preclinical", "Phase I", "Phase II", "Phase III", "Phase IV", "Approved"]),
-  status: z.enum(["Active", "On Hold", "Completed", "Discontinued"]),
+  status: z.enum(["Active", "On Hold", "Completed", "Discontinued", "Terminated", "Pending Approval"]),
   manager: z.string().min(1, "Manager name is required"),
 });
 
@@ -169,6 +169,8 @@ export function EditProgramForm({ program, onSubmit, onCancel, isLoading = false
             <option value="On Hold">On Hold</option>
             <option value="Completed">Completed</option>
             <option value="Discontinued">Discontinued</option>
+            <option value="Terminated">Terminated</option>
+            <option value="Pending Approval">Pending Approval</option>
           </select>
           {errors.status && (
             <p className="text-xs text-destructive leading-tight">{errors.status}</p>

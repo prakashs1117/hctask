@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/card";
 import { EnrollmentBar } from "@/components/molecules/enrollment-bar";
 import { PhaseBadge, TherapeuticAreaBadge } from "@/components/molecules/program-badge";
@@ -10,8 +11,11 @@ interface ProgramGridCardProps {
   program: Program;
 }
 
-export function ProgramGridCard({ program }: ProgramGridCardProps) {
-  const { totalEnrollment, totalTarget, enrollmentPercentage } = calculateProgramTotals(program.studies);
+export const ProgramGridCard = React.memo(({ program }: ProgramGridCardProps) => {
+  const { totalEnrollment, totalTarget, enrollmentPercentage } = useMemo(
+    () => calculateProgramTotals(program.studies),
+    [program.studies]
+  );
 
   return (
     <Link href={`/programs/${program.id}`}>
@@ -57,4 +61,6 @@ export function ProgramGridCard({ program }: ProgramGridCardProps) {
       </Card>
     </Link>
   );
-}
+});
+
+ProgramGridCard.displayName = "ProgramGridCard";

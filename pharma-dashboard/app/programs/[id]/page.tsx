@@ -34,6 +34,7 @@ export default function ProgramDetailPage({
   // Memoized permission checks to avoid repeated calls
   const permissions = useMemo(() => ({
     canEdit: hasPermission(PERMISSIONS.EDIT_PROGRAMS),
+    canDelete: hasPermission(PERMISSIONS.DELETE_PROGRAMS),
     canAddStudies: hasPermission(PERMISSIONS.ADD_STUDIES),
   }), [hasPermission]);
 
@@ -62,6 +63,7 @@ export default function ProgramDetailPage({
       <ProgramNavigationHeader
         program={program}
         canEdit={permissions.canEdit}
+        canDelete={permissions.canDelete}
       />
 
       {/* Program Header Info */}
