@@ -337,7 +337,7 @@ export const selectHasNotifications = createSelector([selectNotifications], (not
 );
 
 export const selectUnreadNotifications = createSelector([selectNotifications], (notifications) =>
-  notifications.filter(n => !n.persistent)
+  notifications.filter((n: UIState['notifications'][0]) => !n.persistent)
 );
 
 export const selectIsAnyComponentLoading = createSelector([selectUIState], (ui) =>

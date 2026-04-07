@@ -94,8 +94,7 @@ export const apiSlice = createApi({
     getDashboardStats: builder.query<ApiResponse<DashboardStats>, void>({
       query: () => '/dashboard/stats',
       providesTags: [{ type: 'Dashboard', id: 'STATS' }],
-      // Refresh stats every 2 minutes
-      pollingInterval: 2 * 60 * 1000,
+      // Note: pollingInterval should be set when using the hook
     }),
 
     // Alerts endpoints

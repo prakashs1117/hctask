@@ -1,4 +1,4 @@
-import type { Middleware, PayloadAction } from '@reduxjs/toolkit';
+import type { Middleware, PayloadAction, AnyAction } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
 
 interface PerformanceMetrics {
@@ -22,9 +22,12 @@ export const performanceMiddleware: Middleware<{}, RootState> = (storeApi) => (n
     const stateAfter = storeApi.getState();
     const duration = endTime - startTime;
 
+    // Type guard for actions with type property
+    const typedAction = action as AnyAction;
+
     // Track slow actions (> 16ms could affect 60fps)
     if (duration > 16) {
-      console.warn(`Slow Redux action: ${action.type} took ${duration.toFixed(2)}ms`);
+      console.warn(`Slow Redux action: ${typedAction.type} took ${duration.toFixed(2)}ms`);
     }
 
     // Calculate state size (rough estimate)
@@ -32,18 +35,18 @@ export const performanceMiddleware: Middleware<{}, RootState> = (storeApi) => (n
 
     // Store performance metrics
     const metrics: PerformanceMetrics = {
-      actionType: action.type,
+      actionType: typedAction.type,
       duration,
       timestamp: Date.now(),
       stateSize,
     };
 
     // Dispatch to dashboard slice for tracking
-    if (action.type !== 'dashboard/recordLoadTime') {
+    if (typedAction.type !== 'dashboard/recordLoadTime') {
       storeApi.dispatch({
         type: 'dashboard/recordLoadTime',
         payload: {
-          component: `redux_${action.type}`,
+          component: `redux_${typedAction.type}`,
           time: duration,
         },
       });
@@ -63,14 +66,17 @@ export const batchingMiddleware: Middleware<{}, RootState> = (storeApi) => (next
   let batchedActions: any[] = [];
 
   return (action) => {
+    // Type guard for actions with type property
+    const typedAction = action as AnyAction;
+
     // Add action to batch if currently batching
-    if (isBatching && action.type !== 'FLUSH_BATCH') {
+    if (isBatching && typedAction.type !== 'FLUSH_BATCH') {
       batchedActions.push(action);
       return;
     }
 
     // Start batching for filter actions
-    if (action.type?.startsWith('programs/set') && action.type.includes('Filter')) {
+    if (typedAction.type?.startsWith('programs/set') && typedAction.type.includes('Filter')) {
       if (!isBatching) {
         isBatching = true;
         batchedActions = [action];

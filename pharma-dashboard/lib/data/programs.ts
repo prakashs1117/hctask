@@ -11,6 +11,7 @@ export const programs: Program[] = [
     phase: "Phase II",
     status: "Active",
     manager: "Dr. Sarah Johnson",
+    riskLevel: "Medium",
     createdAt: new Date("2024-01-15"),
     updatedAt: new Date("2024-03-10"),
     studies: [
@@ -46,6 +47,7 @@ export const programs: Program[] = [
     phase: "Phase III",
     status: "Active",
     manager: "Dr. Michael Chen",
+    riskLevel: "High",
     createdAt: new Date("2023-11-20"),
     updatedAt: new Date("2024-03-05"),
     studies: [
@@ -93,6 +95,7 @@ export const programs: Program[] = [
     phase: "Phase I",
     status: "Active",
     manager: "Dr. Emily Rodriguez",
+    riskLevel: "Low",
     createdAt: new Date("2024-02-10"),
     updatedAt: new Date("2024-03-08"),
     studies: [

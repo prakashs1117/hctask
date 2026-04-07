@@ -196,7 +196,7 @@ export const selectExpandedPrograms = (state: RootState) => state.programs.expan
 // Complex selectors
 export const selectActiveFilterCount = createSelector([selectFilters], (filters) => {
   return Object.entries(filters).filter(([key, value]) => {
-    if (key === 'search') return value.trim() !== '';
+    if (key === 'search') return (value as string).trim() !== '';
     return value !== 'All';
   }).length;
 });

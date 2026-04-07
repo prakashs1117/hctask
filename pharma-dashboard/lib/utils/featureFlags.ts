@@ -21,6 +21,14 @@ export const featureFlags = {
   enableVirtualization: true,
   /** Enable analytics tracking */
   enableAnalytics: false,
+  /** Enable beta features */
+  enableBetaFeatures: false,
+  /** Enable maintenance mode */
+  enableMaintenanceMode: false,
+  /** Enable advanced analytics */
+  enableAdvancedAnalytics: false,
+  /** Enable experimental UI components */
+  enableExperimentalUI: false,
 } as const;
 
 /**

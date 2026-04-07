@@ -1,4 +1,4 @@
-import type { Middleware } from '@reduxjs/toolkit';
+import type { Middleware, AnyAction } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
 
 /**
@@ -13,33 +13,36 @@ export const localStorageMiddleware: Middleware<{}, RootState> = (storeApi) => (
   const state = storeApi.getState();
 
   try {
+    // Type guard for actions with type property
+    const typedAction = action as AnyAction;
+
     // Sync favorite programs to localStorage
-    if (action.type?.startsWith('programs/') && action.type.includes('favorite')) {
+    if (typedAction.type?.startsWith('programs/') && typedAction.type.includes('favorite')) {
       localStorage.setItem('favoritePrograms', JSON.stringify(state.programs.favoritePrograms));
     }
 
     // Sync view preferences
-    if (action.type === 'programs/setViewMode') {
+    if (typedAction.type === 'programs/setViewMode') {
       localStorage.setItem('programViewMode', state.programs.viewMode);
     }
 
     // Sync UI preferences
-    if (action.type?.startsWith('ui/updatePreferences')) {
+    if (typedAction.type?.startsWith('ui/updatePreferences')) {
       localStorage.setItem('userPreferences', JSON.stringify(state.ui.preferences));
     }
 
     // Sync recent searches
-    if (action.type === 'ui/addToRecentSearches') {
+    if (typedAction.type === 'ui/addToRecentSearches') {
       localStorage.setItem('recentSearches', JSON.stringify(state.ui.recentSearches));
     }
 
     // Sync dashboard layout
-    if (action.type === 'dashboard/updateWidgetLayout') {
+    if (typedAction.type === 'dashboard/updateWidgetLayout') {
       localStorage.setItem('dashboardLayout', JSON.stringify(state.dashboard.widgetLayout));
     }
 
     // Sync theme settings
-    if (action.type === 'ui/setTheme' || action.type === 'ui/setCompactMode') {
+    if (typedAction.type === 'ui/setTheme' || typedAction.type === 'ui/setCompactMode') {
       localStorage.setItem('themeSettings', JSON.stringify({
         theme: state.ui.theme,
         compactMode: state.ui.compactMode,

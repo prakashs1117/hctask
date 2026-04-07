@@ -203,13 +203,13 @@ export const selectShouldRefresh = createSelector(
 );
 
 export const selectAverageLoadTime = createSelector([selectLoadTimes], (loadTimes) => {
-  const times = Object.values(loadTimes);
+  const times = Object.values(loadTimes) as number[];
   if (times.length === 0) return 0;
   return times.reduce((sum, time) => sum + time, 0) / times.length;
 });
 
 export const selectTotalErrors = createSelector([selectErrorCounts], (errorCounts) => {
-  return Object.values(errorCounts).reduce((sum, count) => sum + count, 0);
+  return (Object.values(errorCounts) as number[]).reduce((sum: number, count: number) => sum + count, 0);
 });
 
 export default dashboardSlice.reducer;

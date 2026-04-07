@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
 import { useAppSelector, useAppDispatch } from '@/lib/store/hooks';
 import { recordLoadTime, incrementErrorCount } from '@/lib/store/slices/dashboardSlice';
 
@@ -48,7 +48,7 @@ export function withOptimization<P extends object>(
 
     try {
       recordRenderTime();
-      return WrappedComponent(props);
+      return React.createElement(WrappedComponent, props);
     } catch (error) {
       handleError(error as Error);
       return null; // Return null instead of JSX to avoid parsing issues

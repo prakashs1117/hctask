@@ -8,10 +8,10 @@ import { Switch } from "@/components/atoms/switch";
 import { Label } from "@/components/atoms/label";
 import { RefreshCw, Settings, Eye, EyeOff } from "lucide-react";
 import { featureFlags } from "@/lib/utils/featureFlags";
-import { useFeatureFlags } from "@/lib/contexts/feature-flags-context";
+import { useFeatureFlags, type FeatureFlagKey } from "@/lib/contexts/feature-flags-context";
 
 interface FeatureFlagConfig {
-  key: keyof typeof featureFlags;
+  key: FeatureFlagKey;
   name: string;
   description: string;
   category: "Core" | "UI/UX" | "Advanced";
@@ -81,6 +81,34 @@ const flagConfigs: FeatureFlagConfig[] = [
     description: "User behavior and performance tracking",
     category: "Advanced",
     impact: "Low"
+  },
+  {
+    key: "enableBetaFeatures",
+    name: "Beta Features",
+    description: "Access to experimental and beta functionality",
+    category: "Advanced",
+    impact: "Medium"
+  },
+  {
+    key: "enableMaintenanceMode",
+    name: "Maintenance Mode",
+    description: "Enable maintenance mode for the application",
+    category: "Advanced",
+    impact: "High"
+  },
+  {
+    key: "enableAdvancedAnalytics",
+    name: "Advanced Analytics",
+    description: "Enhanced analytics with detailed insights",
+    category: "Advanced",
+    impact: "Medium"
+  },
+  {
+    key: "enableExperimentalUI",
+    name: "Experimental UI",
+    description: "New experimental user interface components",
+    category: "UI/UX",
+    impact: "Medium"
   }
 ];
 
@@ -89,7 +117,7 @@ export function FeatureFlagsPanel() {
   const [localFlags, setLocalFlags] = useState(contextFlags || featureFlags);
   const [changes, setChanges] = useState<Record<string, boolean>>({});
 
-  const handleFlagChange = (flagKey: keyof typeof featureFlags, enabled: boolean) => {
+  const handleFlagChange = (flagKey: FeatureFlagKey, enabled: boolean) => {
     setLocalFlags(prev => ({ ...prev, [flagKey]: enabled }));
     setChanges(prev => ({ ...prev, [flagKey]: enabled }));
   };

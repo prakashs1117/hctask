@@ -81,7 +81,7 @@ export function useFilteredPrograms(programs?: Program[]) {
         program.name.toLowerCase().includes(searchTerm) ||
         program.description?.toLowerCase().includes(searchTerm) ||
         program.therapeuticArea.toLowerCase().includes(searchTerm) ||
-        program.leadScientist.toLowerCase().includes(searchTerm)
+        program.manager.toLowerCase().includes(searchTerm)
       );
     }
 
@@ -121,8 +121,8 @@ export function useFilteredPrograms(programs?: Program[]) {
           break;
         case 'priority':
           const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
-          comparison = (priorityOrder[a.priority as keyof typeof priorityOrder] || 0) -
-                      (priorityOrder[b.priority as keyof typeof priorityOrder] || 0);
+          comparison = (priorityOrder[a.riskLevel as keyof typeof priorityOrder] || 0) -
+                      (priorityOrder[b.riskLevel as keyof typeof priorityOrder] || 0);
           break;
         default:
           comparison = 0;
@@ -237,7 +237,7 @@ export function useRoleBasedPrograms(programs?: Program[], role?: string) {
     // For now, return all programs (can be customized based on role)
     switch (role) {
       case 'scientist':
-        return programs.filter(program => program.phase !== 'Terminated');
+        return programs.filter(program => program.status !== 'Terminated');
       case 'manager':
         return programs; // Managers see all programs
       case 'executive':
