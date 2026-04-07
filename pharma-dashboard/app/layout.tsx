@@ -6,6 +6,7 @@ import { QueryProvider } from "@/components/providers/query-provider";
 import { ReduxProvider } from "@/components/providers/redux-provider";
 import { I18nProvider } from "@/components/providers/i18n-provider";
 import { AuthGuard } from "@/components/providers/auth-guard";
+import { FeatureFlagsProvider } from "@/lib/contexts/feature-flags-context";
 import { Sidebar } from "@/components/organisms/sidebar";
 import { Header } from "@/components/organisms/header";
 import { Toaster } from "sonner";
@@ -36,23 +37,25 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} ${poppins.className}`}>
-        <ReduxProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <QueryProvider>
-              <I18nProvider>
-                <AuthGuard>
-                  {children}
-                </AuthGuard>
-              </I18nProvider>
-            </QueryProvider>
-            <Toaster />
-          </ThemeProvider>
-        </ReduxProvider>
+        <FeatureFlagsProvider userId="current-user" environment="production">
+          <ReduxProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <QueryProvider>
+                <I18nProvider>
+                  <AuthGuard>
+                    {children}
+                  </AuthGuard>
+                </I18nProvider>
+              </QueryProvider>
+              <Toaster />
+            </ThemeProvider>
+          </ReduxProvider>
+        </FeatureFlagsProvider>
       </body>
     </html>
   );

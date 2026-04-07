@@ -86,7 +86,7 @@ export function CreateProgramDialog({ canCreate }: CreateProgramDialogProps) {
       <DialogContent className="mx-4 w-[calc(100vw-2rem)] sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create New Program</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-white">
             Create a new drug development program. Fill out the required information below.
           </DialogDescription>
         </DialogHeader>

@@ -9,6 +9,7 @@ import { Badge } from "@/components/atoms/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/atoms/dialog";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import { useAuthStore } from "@/lib/stores/authStore";
+import { useFeatureFlag } from "@/lib/contexts/feature-flags-context";
 import { UserProfile } from "@/components/organisms/user-profile";
 
 /**
@@ -19,6 +20,16 @@ export function Header() {
   const { t, locale, changeLocale } = useTranslation();
   const { role } = useAuthStore();
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+
+  // Use dynamic feature flags from context
+  const isDarkModeEnabled = useFeatureFlag('enableDarkMode');
+  const isI18nEnabled = useFeatureFlag('enableI18n');
+
+  // Log for debugging
+  console.log('🎛️ Header Dynamic Feature Flags:', {
+    enableDarkMode: isDarkModeEnabled,
+    enableI18n: isI18nEnabled
+  });
 
   return (
     <header className="flex h-12 sm:h-14 md:h-16 items-center justify-between border-b bg-card px-3 sm:px-4 md:px-6">
@@ -62,30 +73,34 @@ export function Header() {
           </Link>
         </Button>
 
-        {/* Locale Switcher */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => changeLocale(locale === "en" ? "es" : "en")}
-          title={t("common.changeLanguage")}
-          className="h-8 w-8 p-0 sm:h-9 sm:w-9"
-        >
-          <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
-          <span className="sr-only">{t("common.toggleLanguage")}</span>
-        </Button>
+        {/* Locale Switcher - Only show if i18n is enabled */}
+        {isI18nEnabled && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => changeLocale(locale === "en" ? "es" : "en")}
+            title={t("common.changeLanguage")}
+            className="h-8 w-8 p-0 sm:h-9 sm:w-9"
+          >
+            <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="sr-only">{t("common.toggleLanguage")}</span>
+          </Button>
+        )}
 
-        {/* Theme Toggle */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          title={t("common.toggleTheme")}
-          className="h-8 w-8 p-0 sm:h-9 sm:w-9"
-        >
-          <Sun className="h-4 w-4 sm:h-5 sm:w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-4 w-4 sm:h-5 sm:w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">{t("common.toggleTheme")}</span>
-        </Button>
+        {/* Theme Toggle - Only show if dark mode is enabled */}
+        {isDarkModeEnabled && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            title={t("common.toggleTheme")}
+            className="h-8 w-8 p-0 sm:h-9 sm:w-9"
+          >
+            <Sun className="h-4 w-4 sm:h-5 sm:w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-4 w-4 sm:h-5 sm:w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">{t("common.toggleTheme")}</span>
+          </Button>
+        )}
       </div>
 
       {/* User Profile Dialog */}

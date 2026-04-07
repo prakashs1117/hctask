@@ -42,7 +42,7 @@ export function RoleSpecificDashboard({ programs, stats }: RoleSpecificDashboard
     if (checkAccess(["create_programs"])) {
       actions.push({
         title: "Create New Program",
-        description: "Start a new drug development program",
+        description: "Drug development program",
         icon: Plus,
         href: "/programs",
         variant: "default" as const,
@@ -213,7 +213,11 @@ export function RoleSpecificDashboard({ programs, stats }: RoleSpecificDashboard
                     <action.icon className="h-5 w-5 shrink-0 flex-shrink-0" />
                     <div className="min-w-0 flex-1">
                       <div className="font-medium text-sm truncate">{action.title}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-tight">
+                      <div className={`text-xs mt-0.5 line-clamp-2 leading-tight ${
+                        action.variant === 'default'
+                          ? 'text-white/90'
+                          : 'text-muted-foreground'
+                      }`}>
                         {action.description}
                       </div>
                     </div>

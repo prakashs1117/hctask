@@ -14,9 +14,9 @@ export const featureFlags = {
   /** Enable role-based permissions */
   enableRBAC: true,
   /** Enable dark mode theme */
-  enableDarkMode: true,
+  enableDarkMode: false,
   /** Enable internationalization */
-  enableI18n: true,
+  enableI18n: false,
   /** Enable virtual scrolling for large lists */
   enableVirtualization: true,
   /** Enable analytics tracking */
