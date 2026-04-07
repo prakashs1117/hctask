@@ -1,3 +1,5 @@
+export { CreateStudyDialog } from "./create-study-dialog";
+export { EditStudyDialog } from "./edit-study-dialog";
 export { MetricsGrid } from "./metrics-grid";
 export { MilestoneItem } from "./milestone-item";
 export { MilestonesSection } from "./milestones-section";

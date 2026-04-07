@@ -36,6 +36,7 @@ export default function ProgramDetailPage({
     canEdit: hasPermission(PERMISSIONS.EDIT_PROGRAMS),
     canDelete: hasPermission(PERMISSIONS.DELETE_PROGRAMS),
     canAddStudies: hasPermission(PERMISSIONS.ADD_STUDIES),
+    canEditStudies: hasPermission(PERMISSIONS.EDIT_STUDIES),
   }), [hasPermission]);
 
   // Memoized program metrics calculation
@@ -82,7 +83,9 @@ export default function ProgramDetailPage({
         {/* Studies Section */}
         <StudiesSection
           studies={program.studies}
+          programId={program.id}
           canAddStudies={permissions.canAddStudies}
+          canEditStudies={permissions.canEditStudies}
         />
 
         {/* Sidebar */}

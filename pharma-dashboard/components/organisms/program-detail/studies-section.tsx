@@ -1,17 +1,19 @@
-import { Plus, Activity, BarChart3 } from 'lucide-react';
+import { Activity, BarChart3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/card';
-import { Button } from '@/components/atoms/button';
 import { EmptyState } from '@/components/molecules/empty-state';
 import { StudyCard } from './study-card';
+import { CreateStudyDialog } from './create-study-dialog';
 import { t, TRANSLATION_KEYS } from '@/lib/i18n';
 import type { Study } from '@/types';
 
 interface StudiesSectionProps {
   studies: Study[];
+  programId: string;
   canAddStudies: boolean;
+  canEditStudies: boolean;
 }
 
-export function StudiesSection({ studies, canAddStudies }: StudiesSectionProps) {
+export function StudiesSection({ studies, programId, canAddStudies, canEditStudies }: StudiesSectionProps) {
   return (
     <div className="lg:col-span-2">
       <Card>
@@ -21,17 +23,14 @@ export function StudiesSection({ studies, canAddStudies }: StudiesSectionProps) 
             {t(TRANSLATION_KEYS.COMMON.STUDIES)} ({studies.length})
           </CardTitle>
           {canAddStudies && (
-            <Button variant="outline" size="sm" className="gap-1">
-              <Plus className="h-3 w-3" />
-              {t(TRANSLATION_KEYS.PROGRAM.ADD_STUDY)}
-            </Button>
+            <CreateStudyDialog programId={programId} />
           )}
         </CardHeader>
         <CardContent className="pt-0">
           {studies.length > 0 ? (
             <div className="space-y-3">
               {studies.map((study) => (
-                <StudyCard key={study.id} study={study} />
+                <StudyCard key={study.id} study={study} canEdit={canEditStudies} />
               ))}
             </div>
           ) : (
